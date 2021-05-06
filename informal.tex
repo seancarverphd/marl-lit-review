@@ -4,7 +4,44 @@
 \begin{document}
 \maketitle
 
-This is the body.
+\section{May 6, 2021}
+\subsection{Positioning COMMS and JAMMERS to Defeat Each Other}
+Quite by accident, I discovered a body of literature that I deem very
+relevant to my COMMS and JAMMERS problem.
+
+This work has an intersection with Multi-Agent Systems in that all the
+drones are autonomous systems moving to achieve some goal under
+partial information.  It seems that the authors I have read so far do
+not specifically use reinforcement learning in their solution but
+their solution begs to be extended to an RL framework.  (That said,
+see \cite{testi2020reinforcement} for a non-adversarial MARL-example.)
+
+Also, as far as I know, so far, no one [I am not certain of this,
+yet], specifically talks about the problem I am interested in with
+COMMS and JAMMERS---at least not in the way I have framed it---but the
+relevance should be clear.
+
+The problem they discuss is how to control a sensor network (in my
+case, move the UAVs) in order to bring in the most information from
+the sensors.  They use information-theoretic criteria as their
+objective functions.  Beyond information theoretic criteria there are
+other objectives that do similar things.
+
+I'll list 2 scantly cited papers \cite{nicholson2007information,
+  guerra2018collaborative}.  One more cited but less recent paper is
+\cite{grocholsky2003scalable}.  There are certainly more papers
+available on Google Scholar, but I haven't yet dug into the literature
+yet.  The first paper (2007) was found in \cite{pechoucek2008defense},
+a bound collection of papers and not available otherwise.  The second
+is a more recent IEEE paper (2018) that is not available for free, and
+I have only seen the abstract---but looks even more relevant.  There
+are dozens more, but I would have to read more than the titles to
+determine relevance, which I will do, of course, in time.
+
+The choice facing me now is to go after \emph{depth} to solve the
+COMMS/JAMMERS problem or \emph{breadth} with to understand the full
+scope of the MARL field---or some combination.  Actually, maybe it is
+two separate projects, so I will await direction from stakeholders.
 
 \nocite{*}
 
