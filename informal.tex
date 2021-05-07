@@ -43,6 +43,42 @@ COMMS/JAMMERS problem or \emph{breadth} with to understand the full
 scope of the MARL field---or some combination.  Actually, maybe it is
 two separate projects, so I will await direction from stakeholders.
 
+\section{May 7, 2021}
+
+Reading (2010) ``Particle filter based information-theoretic active
+sensing,'' \cite{ryan2010particle}.  Concerns controlling robot(s)
+where the control objective is to gather sensory information
+(``information gain'').  This objective is described as minimizing the
+entropy of an estimate distribution---the probability distribution for
+the target location.  Their example is target tracking by a UAV with a
+camera mounted on a fixed-wing autonomous aircraft and a moving target
+on the ground.
+
+This (2010) paper \cite{ryan2010particle} cites two more papers for
+background on the methods they develop: (2004)
+\cite{andrieu2004particle} and (2009) \cite{hoffmann2009mobile}.  The
+first (2004) \cite{andrieu2004particle} is a review paper by leaders
+of the field (that I recognized) that seems to just give an
+explanation needed to understand the fundamentals of the particle
+filter.  The second (2009) \cite{hoffmann2009mobile} also looks very
+helpful for putting all this together.  The (2010) paper
+\cite{ryan2010particle} seems to be a direct extention of the (2009)
+paper \cite{hoffmann2009mobile}---the difference being that the (2010)
+paper does a receding horizon control (RHC) to make it possible to
+model fixed-wing aircraft that take a long time to turn as well as
+mounted cameras that they claim lead to non-minimum phase behavior.
+The paper \cite{ryan2010particle} uses a single aircraft as their
+example (though they say their method is more general) whereas
+\cite{hoffmann2009mobile} uses a swarm of maneuverable (in one time
+step) UAVs.
+
+The (2009) \cite{hoffmann2009mobile} paper cites
+\cite{andrieu2004particle} as a reference for Receeding Horizon
+Control (RHC).
+
+\textbf{All three of these papers look like papers I would want to
+  read closely.}
+
 \nocite{*}
 
 \bibliographystyle{unsrt}
