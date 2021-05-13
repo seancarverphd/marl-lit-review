@@ -1,68 +1,91 @@
-\documentclass{article} \title{Automomous Control of Communications
-  Aircraft During Combat: The Promises of Recent Artifical Intelligence
-  Literature}
+\documentclass{article} \title{Automomous Control of Aircraft for
+  Communications and Electronic Warfare: The Promises of Recent
+  Artifical Intelligence Literature}
 \author{Sean Carver, Ph.D. at Data Machines Corporation}
 \begin{document}
 \maketitle
-\abstract{We pose a novel problem in autonomous control of
-  communications aircraft and provide pointers to the literature
-  offering an approximately optimal solution in many diverse
-  scenarios.  The problem lies within the field adversarial
-  Multi-Agent Reinforcement Learning (MARL) and Active Sensing.  Two
-  factions (labeled ``blue'' and ``red'') exist within this zero-sum
-  game.  The blue side tries to keep ground-based assets in
-  communication with the headquarters via a fleet of comms (unmanned
-  aerial vehicles, or UAVs fitted for communication); whereas the red
-  side tries to jam this network with a fleet of jammers (also UAV's).
-  Each faction lacks full access to the state of the opposing side,
-  and must infer this state through positioning its fleet for best
-  sensory performance (active sensing) while simultaneously achieving
-  the objective of keeping units on the ground in communication.
-  Within each faction, different units/UAVs can fall out of
-  communication making each of the blue and red factions a multiagent
-  collection, fully cooperating among themselves but with different
-  information, to fight its adversary (the other side).  Our
-  contribution poses the problem while pointing to literature for
-  possible ideas for implementation.}
+\abstract{We pose an unsolved problem in autonomous control of
+  aircraft for communications and jamming (electronic warfare).  We
+  aim to provide helpful pointers to literature offering approximately
+  optimal solutions to related problems---such as cyber-security,
+  precision farming, and search and rescue.  Solutions to these
+  related problems promise applicability to diverse scenarios beyond
+  the scope of the original works---including the scenario considered
+  here.
+
+  The problem we address lies within the fields of adversarial
+  Multi-Agent Reinforcement Learning (MARL) and active sensing.  In
+  our problem, two opposing factions (labeled ``blue'' and ``red'')
+  compete to win a zero-sum/purely adversarial game.  The blue side
+  tries to maintain communication links between ground-based assets
+  with a fleet of ``comms'' whereas the red; whereas the red side
+  tries to jam this network with a fleet of ``jammers.''  An Unmanned
+  Aerial Vehicle (UAV) becomes a comm or a jammer when fitted for one
+  of these purposes.
+
+  Each faction lacks access to the state of the opposing side, and
+  must infer this state probabilisticly through positioning its fleet
+  for best sensory performance and localization (active sensing).
+  Moreover, the ground troops of each side, positioned appropriately,
+  have the possibility of shooting down any of their adversary's UAVs.
+  Finally, the blue side must simultaneously achieve its objective of
+  keeping units on the ground in communication.  Despite best efforts,
+  different units/UAVs can fall in and out of communication with their
+  respective headquarters, making each of the blue and red factions a
+  multi-agent collection, fully cooperating among itself, but with
+  different information, to fight its adversary having opposing goals.
+
+  Our contribution poses this problem while pointing to literature for
+  possible ideas for moving the field forward.  Finally, we pose
+  certain simpler-than-reality mini-games for efficiently
+  investigating solutions leading to a successful implementation for
+  the full adversarial problem in real-world combat.}
 
 \section{Introduction}
 If unfortunate circumstances compel our leaders to order our armed
-forces to take a city from an adversary, the command center on the
-ground would benefit from constant two-way communication with all its
-other units during the war.  In the fog that accompanies such
-conflicts, our forces cannot rely on cell phones to keep in touch.
-Instead, two way radios, connected by a network of comms (unmanned
-arial vehicles, or UAVs, fitted for communication) will allow the
-friendlies to stay connected.
+forces to take a city from an adversary, the command headquarters on
+the ground would benefit from constant two-way communication with all
+its other units during the conflict.
 
-While better than cell phones, a network of radios has it own
-problems: our adversaries clearly prefer that we not speak to each
-other.  To this end they may send up jammers (UAVs blocking
-communication) to get in our way.
+In the fog that accompanies such struggles, our forces cannot rely on
+our enemy's network of cell towers to keep in touch.  Instead, two way
+radios, linked by a network of ``comms'' will hopefully allow our
+friendlies to stay connected. A comm is an unmanned aerial vehicle
+(UAV) fitted for communication.
+
+While vastly better than cell phones, such a network has it own set of
+issues.  Indeed, our adversaries clearly prefer that we not speak to
+each other.  To pursue this preference, they may send up jammers (UAVs
+blocking communication) to keep us isolated.  Thus begins a delicate
+dance of each side positioning its fleet to best find the other's
+birds and in so doing best keep or block communications.
 
 We study the question of how each side can control its fleet by
-autonomously ordering and carrying out positioning and
-communications-eletronics operation instructions (CEOI) to optimally
-achieve objectives.  We are interested in the strategies for both
-sides, because we want our systems to defeat our enemy, even if they
-do something intelligent.  Moreover, in a real war, our side may
-decide to put up both comms and jammers, requiring strategies for both
+autonomously ordering and carrying out flight and communications-
+electronics operation instructions (CEOI) to optimally achieve
+objectives.  We are interested in the strategies for both sides,
+because to defeat our enemy, we must understand the intelligent
+countermeasures they may take. Moreover, in a real war, our side may
+choose to put up both comms and jammers, requiring strategies for both
 roles.
 
-Much recent literature has talkled the problem of optimal search and
-rescue.  This effort clearly relates to the problem at hand because
-each side wants to optimally infer the positions of the other to
-counter their stategy.  But there is a difference between search and
-rescue and our problem.  The people being rescued presumably want to
-be rescued and will cooperate with the effort, whereas our factions
-presumably act to avoid being localized, with various strategies.  The
-search and rescue problem allows a purely optimal control and active
-sensing and control problem, we must resort to learning our opponents
-strategy with artificial intelligence (adversarial multiagent
-reinforcement learning).
+Much recent literature has tackled the problem of optimal search and
+rescue.  This effort clearly relates to the problem at hand because,
+as with rescue, each side benefits from successfully inferring the
+positions of the other.  But there is a difference between search and
+rescue and electronic warfare.  People being rescued presumably want
+to be found and will presumably cooperate with this effort.  In
+electronic warfare, it is always best if the other side cannot find
+you. Thus search and rescue can succeed with a purely active sensing
+and optimal control solution.  In our scenario, we need to learn to
+counter our opponents strategy, whatever it may be.  To this end, we
+propose to apply artificial intelligence (specifically, adversarial
+multi-agent reinforcement learning).
 
 This paper reviews the literature relevant to the comms and jammers
-problem just posed.  At the end of the paper, a discussion will present ideas for applying this work to other domains, notably cyber-security.
+problem just posed.  This paper will close with a very brief
+discussion presenting ideas for applying this work to other relevant
+domains, notably cyber-security.
 
 \nocite{*}
 
