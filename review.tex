@@ -11,8 +11,8 @@
   Multi-Agent Reinforcement Learning (MARL) and Active Sensing.  Two
   factions (labeled ``blue'' and ``red'') exist within this zero-sum
   game.  The blue side tries to keep ground-based assets in
-  communication with the headquarters via a fleet of comms (Unmanned
-  Aerial Vehicles, or UAVs fitted for communication); whereas the red
+  communication with the headquarters via a fleet of comms (unmanned
+  aerial vehicles, or UAVs fitted for communication); whereas the red
   side tries to jam this network with a fleet of jammers (also UAV's).
   Each faction lacks full access to the state of the opposing side,
   and must infer this state through positioning its fleet for best
@@ -26,14 +26,43 @@
   possible ideas for implementation.}
 
 \section{Introduction}
-If unfortunate circumstances compel orders from above for our armed
+If unfortunate circumstances compel our leaders to order our armed
 forces to take a city from an adversary, the command center on the
-ground benefits from constant two-way communication with all its
-units.  In the fog of war, our forces cannot rely on cell phones: two
-way radios, connected by a network of Comms (Unmanned Arial Vehicles
-UAVs) allow friendly units to keep in touch.  But
-a problem arises from the fact the fact that our adversary would
-prefer that we not speak to each other, and they may send up jammers
+ground would benefit from constant two-way communication with all its
+other units during the war.  In the fog that accompanies such
+conflicts, our forces cannot rely on cell phones to keep in touch.
+Instead, two way radios, connected by a network of comms (unmanned
+arial vehicles, or UAVs, fitted for communication) will allow the
+friendlies to stay connected.
+
+While better than cell phones, a network of radios has it own
+problems: our adversaries clearly prefer that we not speak to each
+other.  To this end they may send up jammers (UAVs blocking
+communication) to get in our way.
+
+We study the question of how each side can control its fleet by
+autonomously ordering and carrying out positioning and
+communications-eletronics operation instructions (CEOI) to optimally
+achieve objectives.  We are interested in the strategies for both
+sides, because we want our systems to defeat our enemy, even if they
+do something intelligent.  Moreover, in a real war, our side may
+decide to put up both comms and jammers, requiring strategies for both
+roles.
+
+Much recent literature has talkled the problem of optimal search and
+rescue.  This effort clearly relates to the problem at hand because
+each side wants to optimally infer the positions of the other to
+counter their stategy.  But there is a difference between search and
+rescue and our problem.  The people being rescued presumably want to
+be rescued and will cooperate with the effort, whereas our factions
+presumably act to avoid being localized, with various strategies.  The
+search and rescue problem allows a purely optimal control and active
+sensing and control problem, we must resort to learning our opponents
+strategy with artificial intelligence (adversarial multiagent
+reinforcement learning).
+
+This paper reviews the literature relevant to the comms and jammers
+problem just posed.  At the end of the paper, a discussion will present ideas for applying this work to other domains, notably cyber-security.
 
 \nocite{*}
 
