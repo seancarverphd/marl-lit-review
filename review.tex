@@ -10,34 +10,35 @@
   optimal solutions to related problems---such as cyber-security,
   precision farming, and search and rescue.  Solutions to these
   related problems promise applicability to diverse scenarios beyond
-  the scope of the original works---including the scenario considered
-  here.
+  the scope of the original works---including to the important
+  scenario considered here.
 
   The problem we address lies within the fields of adversarial
   Multi-Agent Reinforcement Learning (MARL) and active sensing.  In
   our problem, two opposing factions (labeled ``blue'' and ``red'')
   compete to win a zero-sum/purely adversarial game.  The blue side
   tries to maintain communication links between ground-based assets
-  with a fleet of ``comms'' whereas the red; whereas the red side
-  tries to jam this network with a fleet of ``jammers.''  An Unmanned
-  Aerial Vehicle (UAV) becomes a comm or a jammer when fitted for one
-  of these purposes.
+  with a fleet of ``comms;'' whereas the red side tries to jam this
+  network with a fleet of ``jammers.''  An Unmanned Aerial Vehicle
+  (UAV) becomes a comm or a jammer when fitted for one of these
+  purposes.
 
   Each faction lacks access to the state of the opposing side, and
   must infer this state probabilisticly through positioning its fleet
   for best sensory performance and localization (active sensing).
-  Moreover, the ground troops of each side, positioned appropriately,
-  have the possibility of shooting down any of their adversary's UAVs.
-  Finally, the blue side must simultaneously achieve its objective of
-  keeping units on the ground in communication.  Despite best efforts,
-  different units/UAVs can fall in and out of communication with their
-  respective headquarters, making each of the blue and red factions a
-  multi-agent collection, fully cooperating among itself, but with
-  different information, to fight its adversary having opposing goals.
+  Moreover, the ground troops of each side, when also positioned
+  appropriately, have the possibility of shooting down any of their
+  adversary's UAVs.  Finally, the blue side must simultaneously
+  achieve its objective of keeping units on the ground in
+  communication.  Despite best efforts, different units/UAVs can fall
+  in and out of communication with their respective headquarters,
+  making each of the blue and red factions a multi-agent collection,
+  fully cooperating among itself, but with different information, to
+  fight its adversary having opposing goals.
 
   Our contribution poses this problem while pointing to literature for
-  possible ideas for moving the field forward.  Finally, we pose
-  certain simpler-than-reality mini-games for efficiently
+  possible ideas for moving the field forward.  Finally, we pose a
+  heirarchy of simpler-than-reality mini-games for efficiently
   investigating solutions leading to a successful implementation for
   the full adversarial problem in real-world combat.}
 
@@ -49,47 +50,179 @@ its other units during the conflict.
 
 In the fog that accompanies such struggles, our forces cannot rely on
 our enemy's network of cell towers to keep in touch.  Instead, two way
-radios, linked by a network of ``comms'' will hopefully allow our
-friendlies to stay connected. A comm is an unmanned aerial vehicle
-(UAV) fitted for communication.
+radios, linked by a network of ``comms'' (UAVs for communication) will
+hopefully allow our friendlies to stay connected.
 
 While vastly better than cell phones, such a network has it own set of
-issues.  Indeed, our adversaries clearly prefer that we not speak to
-each other.  To pursue this preference, they may send up jammers (UAVs
-blocking communication) to keep us isolated.  Thus begins a delicate
-dance of each side positioning its fleet to best find the other's
-birds and in so doing best keep or block communications.
+challenges.  Indeed, our adversaries clearly prefer to keep us out of
+communication.  To pursue this preference, they may send up jammers
+(UAVs for blocking communication).  Thus begins a delicate dance of
+each side positioning its fleet to best find the other's birds and in
+so doing best keep or block communications.
 
 We study the question of how each side can control its fleet by
 autonomously ordering and carrying out flight and communications-
-electronics operation instructions (CEOI) to optimally achieve
+electronics operation instructions (CEOI) to optimally achieve its
 objectives.  We are interested in the strategies for both sides,
 because to defeat our enemy, we must understand the intelligent
 countermeasures they may take. Moreover, in a real war, our side may
-choose to put up both comms and jammers, requiring strategies for both
+choose to fly both comms and jammers, requiring strategies for both
 roles.
 
 Much recent literature has tackled the problem of optimal search and
-rescue.  This effort clearly relates to the problem at hand because,
-as with rescue, each side benefits from successfully inferring the
-positions of the other.  But there is a difference between search and
-rescue and electronic warfare.  People being rescued presumably want
-to be found and will presumably cooperate with this effort.  In
-electronic warfare, it is always best if the other side cannot find
-you. Thus search and rescue can succeed with a purely active sensing
-and optimal control solution.  In our scenario, we need to learn to
-counter our opponents strategy, whatever it may be.  To this end, we
-propose to apply artificial intelligence (specifically, adversarial
-multi-agent reinforcement learning).
+rescue, and several similar scenarios.  This effort clearly relates to
+the problem at hand because, as with rescue, each of our sides
+benefits from successfully inferring the positions of targets.  But
+there is a difference between search and rescue and electronic
+warfare.  People being rescued presumably want to be found and will
+presumably cooperate with this effort.  But in electronic warfare
+participants always aim to keep their locations from the other
+side. As a result, while search and rescue can succeed with a purely
+active sensing and optimal control solution, in our scenario, we need
+to learn to counter an opponent's strategy.  To this end, we propose
+to apply artificial intelligence: specifically, adversarial
+multi-agent reinforcement learning.
 
-This paper reviews the literature relevant to the comms and jammers
-problem just posed.  This paper will close with a very brief
-discussion presenting ideas for applying this work to other relevant
-domains, notably cyber-security.
+This paper reviews the literature relevant to our problem in
+electronic warfare, but will close with a very brief discussion
+presenting ideas for applying this work to other domains of interest
+to us, notably cyber-security.
+
+\section{Scenario}
+
+The field of interest is a square in the Euclidean plane.  In this
+field, there is a ``source,'' or ``sender,'' labeled $S$, a receiver,
+labeled $R$, and $n$ different ``jammers,'' labeled $J_1, \dots, J_n$.
+We do not assume that the ability to communicate is symmetric---a
+separate calculation is needed when the roles of sender and receiver
+are reversed.  Additionally there are $m$ different comms to
+facilitate communication.
+
+\section{Optimal Placement Of Comms}
+
+Let $c_i$ denote positions of comms and let $j_k$ denote positions
+position of jammers.  If these quantities are known, we can compute
+the probability of a successful communication between the headquarters
+and an asset (see more details below).  We denote this probability
+
+$$P(\mbox{transmission}|c_i,j_k)$$
+
+Some choices still need to be made about how this probability will be
+computed, but it shouldn't be hard.  By total probability,
+
+$$P(\mbox{transmission}|c_i) = \sum_k P(\mbox{transmission}|c_i,j_k)
+  P(j_k)$$
+
+It is a sum rather than an integral because we only consider grid
+points as possible locations.  That may need to be generalized.  The
+second factor of each term in the sum is the posterior probability
+already coded for computation and described below.
+
+A final step in the computation is a optimization over the comm
+positions $c_i$.
+
+\section{TL;DR}
+Let $P_{j}(d_j)$ be the power of jammer $j$ at the receiver, at
+distance $d_j$.  Let $P_S(d_S)$ be power of the source at the
+receiver, at distance $d_S$.  Let $P_N$ be the power of the ambient
+noise.
+
+These functions are given by $P_j = \frac{M_j}{d_j^2}$, for $j = 1,
+\dots, n$ and $P_S = \frac{M_S}{d_S^2}$; $P_N$ is a constant.
+
+The probability of a successful transmission is given by
+
+$$\mbox{sigmoid}\left( 10 \log_{10}\left(\frac{P_S(d_S)}{P_1(d_1) +
+  P_2(d_2) + \dots + P_n(d_n) + P_N} \right) \right)$$
+
+The quantity in the sigmoid is the strength expressed in decibels, of
+the signal against the background that includes all jammers and the
+ambient noise, see Equation (1) in reference \cite{parlin2018jamming}
+
+\section{Some thoughts about the man-in-the-middle}
+Billy had alerted us to the fact that it was more than just distance
+to jammer--jammers in the line of sight were more potent than those
+off of it.
+
+I spent a long time trying to justify putting this feature explicitly
+in the model.  But the model above seemed most consistent with what I
+was reading in the literature and it made sense.  It is distance to
+receiver that matters.  A man in the middle generally will jam the
+receiver, unless distances are great enough, the ambient noise is
+small enough, and the proportionality constant of the jammer is small
+enough compared to the proportionality constant of the sender.  This
+makes sense to me.
+
+There is such a thing as electomagnetic interferece.  According to
+Wikipedia: ``The effect of unwanted energy due to one or a combination
+of emissions, radiations, or inductions upon reception in a
+radiocommunication system, manifested by any performance degradation,
+misinterpretation, or loss of information which could be extracted in
+the absence of such unwanted energy.'' My reading of this is this:
+interference happens upon the reception of the signal, in the circuits
+of a radiocommunication system, not with signal itself.
+Electomagnetic waves don't interact, as far as I am aware, but it can
+be impossible to pick out the signal in the noise.
+
+Having said all that, a directional receiving antenna would sharpen
+the effect of a man-in-the-middle jammer, versus one off to the side,
+but for the moment I'm keeping it simple and assuming the antennae
+have no preferred direction.  Could change that next, though, by
+assuming they are optimally directed to receive the signal in a
+particular orientation, and to reject signals in substantially
+different directions.
+
+\section{Power}
+
+The power of the radio signal from a point source at a distance $r$ is
+given by (assuming the free-space propagation loss model):
+$$P_{\mbox{signal}}(d) = \frac{M}{d^2},$$ where $M$ is a
+proportionality constant that depends on units, and even with the same
+units, can be different for different senders.  Note that $M$ is the
+power of the signal at distance 1.  The value of $M$ may be know for
+friendlies but need to be extimated for jammers.  Equation (1) in
+reference \cite{benner1996effects}, showed a similar equation for
+``path loss'' relaxing the free-space propagation loss model with a
+proportionality exponent possibly different from 2.  It seems that the
+units of distance are important in this model---see reference
+\cite{benner1996effects}. I note this observation for the future as I
+intend to use the free-space propagation loss model for now.
+
+
+Equation (5) in reference \cite{xu2007adjusting} gives
+$$M = \frac{P_T G_T G_R}{4 \pi},$$ where $P_T$ is the power of the
+transmitter, $G_T$ is the gain of the transmitter in the direction of
+the receiver, and $G_R$ is the gain of the receiver in the direction
+of the transmitter.  Presumably the transmitter could be either the
+jammer or the source.  Reference \cite{benner1996effects}, gives a
+similar equation that may not be entirely consistent that has a
+dependence on wavelength, Equation (1).  The basic thing I get from
+this is kind of obvious for anyone raised in the era before cable
+television---it depends on the orientation of the anntena how strong
+the signal.  Again, I am just putting this observation in this
+document for the future.  For the first cut the power received by the
+anntena is just a function of the distance to the transmitter, not the
+orientation of the antenna.
+
+\section{Jamming}
+
+One reference I have \cite{xu2007adjusting} talks about channel
+capacity as the maximum bit rate $S \rightarrow R$, under the
+assumption of error correcting codes, etc.  So it seems in this
+paradigm that it is not whether you are jammed or not, but how many
+bits get through per second.  In several references, including this
+one there is a noise term which adds power to the jammer in a
+symmetric way.  When the decibels in the equation above drops below
+the 0, the channel capacity falls below the bandwidth of the channel.
+
+I am going to ignore the details of channel capacity and error
+correcting codes and just say probability of transmission is a
+function of the ratio of the powers of signal to background, expressed
+as a sigmoid of decibels.
 
 \nocite{*}
-
-\bibliographystyle{unsrt}
+\bibliographystyle{ieeetr}
+% \bibliographystyle{unsrt}
 \bibliography{marl}
 
 \end{document}
