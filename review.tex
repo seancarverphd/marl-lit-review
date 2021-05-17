@@ -88,8 +88,46 @@ electronic warfare, but will close with a very brief discussion
 presenting ideas for applying this work to other domains of interest
 to us, notably cyber-security.
 
-\section{Scenario}
+\section{A Heirarchy of Models}
 
+We propose models of the battlefield together with capabilties of each
+side.  However, we aim to make our method successful against a
+real-world adversary on a real-world battlefield, not just against one
+particular model adversary on one particular model battlefield.  The
+approach we suggest implements a heirarchy of models, from trivial to
+complex.  For the purposes of the exposition, we illustrate just a few
+pieces of this heirarchy.
+
+We [at Data Machines Corporation (DMC)] previously supported a
+simulation environment (ULTRA) to train human commanders to take a
+city from an adversary.  The simulation platform (developed outside of
+DMC) showed stunning complexity and realism in its details.  It
+included electronic warfare as well as a large array of other features
+of the conflict.
+
+One might conceive of the following challenge in Artificial
+Intelligence: consistently beat at ULTRA the best human players of
+ULTRA.  In this sense, ULTRA finds an analog with the dizzyingly
+complex game StarCraft II, cracked several years ago by reseachers at
+DeepMind \cite{vinyals2019grandmaster}.  That said, for electronic
+warfare, we care about something harder: we care not just that we can
+beat the best human opponents in the game, but more importantly we
+care that we can beat our future adversaries on real-world
+battlefields.
+
+A bot that excels against human players of ULTRA has merit as a goal,
+but we must worry that that in training against ULTRA will train for
+any peculiarities of the game that do not exist in the real world---if
+any such peculiarities actually exist in the game.  To counter this
+possibility, our approach trains our bots against a wide variety of
+scenarios---both complex scenarios within ULTRA, and simple, even
+trivial, ones outside of ULTRA.  Simple and trivial scenarios, while
+in themselves will not win a war, can lead to insight about what
+happens in training, which makes a step in that direction.
+
+\section{Even trivial scenarios reveal complexities}
+
+\section{A moderately complex model}
 The field of interest is a square in the Euclidean plane.  In this
 field, there is a ``source,'' or ``sender,'' labeled $S$, a receiver,
 labeled $R$, and $n$ different ``jammers,'' labeled $J_1, \dots, J_n$.
