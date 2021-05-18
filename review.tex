@@ -5,13 +5,11 @@
 \begin{document}
 \maketitle
 \abstract{We pose an unsolved problem in autonomous control of
-  aircraft for communications and jamming (electronic warfare).  We
-  aim to provide helpful pointers to literature offering approximately
-  optimal solutions to related problems---such as cyber-security,
-  precision farming, and search and rescue.  Solutions to these
-  related problems promise applicability to diverse scenarios beyond
-  the scope of the original works---including to the important
-  scenario considered here.
+  aircraft for communications and jamming (electronic warfare) and
+  review the literature relevant to this problem. Some of these papers
+  offer approximately optimal solutions to related problems in
+  different domains, while still promising applicability to the
+  important scenario considered here.
 
   The problem we address lies within the fields of adversarial
   Multi-Agent Reinforcement Learning (MARL) and active sensing.  In
@@ -37,12 +35,13 @@
   fight its adversary having opposing goals.
 
   Our contribution poses this problem while pointing to literature for
-  possible ideas for moving the field forward.  Finally, we pose a
+  possible ideas for moving the field forward.  Finally, we consider a
   heirarchy of simpler-than-reality mini-games for efficiently
   investigating solutions leading to a successful implementation for
   the full adversarial problem in real-world combat.}
 
 \section{Introduction}
+
 If unfortunate circumstances compel our leaders to order our armed
 forces to take a city from an adversary, the command headquarters on
 the ground would benefit from constant two-way communication with all
@@ -70,18 +69,19 @@ choose to fly both comms and jammers, requiring strategies for both
 roles.
 
 Much recent literature has tackled the problem of optimal search and
-rescue, and several similar scenarios.  This effort clearly relates to
-the problem at hand because, as with rescue, each of our sides
-benefits from successfully inferring the positions of targets.  But
-there is a difference between search and rescue and electronic
-warfare.  People being rescued presumably want to be found and will
-presumably cooperate with this effort.  But in electronic warfare
-participants always aim to keep their locations from the other
-side. As a result, while search and rescue can succeed with a purely
-active sensing and optimal control solution, in our scenario, we need
-to learn to counter an opponent's strategy.  To this end, we propose
-to apply artificial intelligence: specifically, adversarial
-multi-agent reinforcement learning.
+rescue, and several similar scenarios---notably cyber-security and
+precision farming.  Search and rescue clearly relates to the problem
+at hand because, as with rescue, each of our sides benefits from
+successfully inferring the positions of targets.  But there is a
+difference between search and rescue and electronic warfare.  People
+being rescued presumably want to be found and will presumably
+cooperate with this effort.  But in electronic warfare participants
+always aim to keep their locations from the other side. As a result,
+while search and rescue can succeed with a purely active sensing and
+optimal control solution, in our scenario, we need to learn to counter
+an opponent's strategy.  To this end, we propose to apply artificial
+intelligence: specifically, adversarial multi-agent reinforcement
+learning.
 
 This paper reviews the literature relevant to our problem in
 electronic warfare, but will close with a very brief discussion
