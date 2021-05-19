@@ -6,11 +6,11 @@
 \maketitle
 \abstract{We pose an unsolved problem in autonomous control of
   aircraft for communications and jamming (electronic warfare) and
-  review the literature relevant to this problem. Some work
-  offers approximately optimal solutions to related problems in
-  different domains---promising applicability to the
-  important scenarios considered here.  Other work covers methods that
-  we may find useful in extending these relevant solutions.
+  review the literature relevant to this problem. Some work offers
+  approximately optimal solutions to related problems in different
+  domains---promising applicability to the important scenarios
+  considered here.  Other work covers methods that we may find useful
+  in extending these relevant solutions.
   
   The problem we address lies within the fields of adversarial
   Multi-Agent Reinforcement Learning (MARL) and active sensing.  In
@@ -27,20 +27,21 @@
   for best sensory performance and localization (active sensing).
   Moreover, the ground troops of each side, when also positioned
   appropriately, have the possibility of shooting down any of their
-  adversary's UAVs.  The blue side must simultaneously
-  achieve its objective of keeping units on the ground in
-  communication and the red side must simultaneously try to jam this
-  communication.  Despite best efforts, different units/UAVs can fall
-  in and out of communication with their respective headquarters,
-  making each of the blue and red factions a multi-agent collection,
-  fully cooperating among itself, but with different information, to
-  fight its adversary having opposing goals.
+  adversary's UAVs.  The blue side must simultaneously achieve its
+  objective of keeping units on the ground in communication and the
+  red side must simultaneously try to jam this communication.  Despite
+  best efforts, different units/UAVs can fall in and out of
+  communication with their respective headquarters, making each of the
+  blue and red factions a multi-agent collection, fully cooperating
+  among itself, but with different information, to fight its adversary
+  having opposing goals.
 
   Our contribution poses this problem while pointing to literature for
-  possible ideas for moving the field forward.  We discuss the use of a
-  heirarchy of simpler-than-reality mini-games for efficiently
+  possible ideas for moving the field forward.  We discuss the use of
+  a heirarchy of simpler-than-reality mini-games for efficiently
   investigating and building upon solutions leading to a successful
-  implementation for the full adversarial problem in real-world combat.}
+  implementation for the full adversarial problem in real-world
+  combat.}
 
 \section{Introduction}
 
@@ -67,226 +68,74 @@ electronics operation instructions (CEOI) to optimally achieve its
 objectives.  We are interested in the strategies for both sides,
 because to defeat our enemy, we must understand the intelligent
 countermeasures they may take. Moreover, in a real war, our side---as
-well as theirs---may
-choose to fly both comms and jammers, requiring strategies for both
-roles.
+well as theirs---may choose to fly both comms and jammers, requiring
+strategies for both roles.
 
 Much recent literature has tackled the problem of optimal search and
-rescue.  Other work has considered different scenarios requiring similar 
-tools---notably cyber-security and precision farming.  CITE 3.
-Search and rescue clearly relates to the problem
-at hand because, as with rescue, each of our sides benefits from
-successfully inferring the positions of targets.  But there is a
-difference between search and rescue and electronic warfare.  People
-being rescued presumably want to be found and will presumably cooperate 
-with this effort.  In electronic warfare, on the other hand, participants
-always aim to keep their locations hidden from the other side. As a result,
-while search and rescue can succeed with a purely active sensing and
-optimal control solution, in our scenario, we need to learn to counter
-an opponent's strategy.  To this end, we propose to apply artificial
+rescue.  Other work has considered different scenarios requiring
+similar tools---notably cyber-security and precision farming.  CITE 3.
+Search and rescue clearly relates to the problem at hand because, as
+with rescue, each of our sides benefits from successfully inferring
+the positions of targets.  But there is a difference between search
+and rescue and electronic warfare.  People being rescued presumably
+want to be found and will presumably cooperate with this effort.  In
+electronic warfare, on the other hand, participants always aim to keep
+their locations hidden from the other side. As a result, while search
+and rescue can succeed with a purely active sensing and optimal
+control solution, in our scenario, we need to learn to counter an
+opponent's strategy.  To this end, we propose to apply artificial
 intelligence: specifically, adversarial multi-agent reinforcement
-learning. This paper reviews the literature relevant to this approach to
-electronic warfare.
+learning. This paper reviews the literature relevant to this approach
+to electronic warfare.
 
 \section{Optimal and suboptimal filtering}
-The filtering problem takes measurements of a stochastic system---possibly
-transformed measurements and possibly with noise---and produces estimates of
-the state of the system.
+The filtering problem takes measurements of a stochastic
+system---possibly transformed measurements and possibly with
+noise---and produces estimates of the state of the system.
 
-Readers will find the optimal solution to this problem in the first pages of any textbook CITE on nonlinear filtering: a recursion consisting of alternating applications of the Chapman-Kolmogorov Equation and Bayes Rule.  
+Readers will find the optimal solution to this problem in the first
+pages of any textbook CITE on nonlinear filtering: a recursion
+consisting of alternating applications of the Chapman-Kolmogorov
+Equation and Bayes Rule.
 
-Unfortunately, solving each of these equations demands an integration which remains impossible to perform exactly (ie without discretizatiom) in all but two cases.  In all other cases, a researcher must use an approximation---a suboptimal (hopefully approximately optimal) filter.  Readers will find that the rest of the nonlinear filtering textbooks (beyond the first few pages devoted to the optimal exposition) concerns these suboptimal approximations.
+Unfortunately, solving each of these equations demands an integration
+which remains impossible to perform exactly (ie without
+discretizatiom) in all but two cases.  In all other cases, a
+researcher must use an approximation---a suboptimal (hopefully
+approximately optimal) filter.  Readers will find that the rest of the
+nonlinear filtering textbooks (beyond the first few pages devoted to
+the optimal exposition) concerns these suboptimal approximations.
 
-We list the two optimal solutions to the filtering equation as (1) the Kalman filter, and (2) the hidden Markov filter.  The Kalman filter applies with a linear model 
-of the process, a quadratic objective function measuring optimality, and Gaussian noise corruption (both the process noise and the measurement noise).  On the other hand, a hidden Markov filter applies with a finite-state model of the process. These restrictions unacceptably constrain usable models for our application area, and therefore we will focus on approximately optimal alternatives.
+We list the two optimal solutions to the filtering equation as (1) the
+Kalman filter, and (2) the hidden Markov filter.  The Kalman filter
+applies with a linear model of the process, a quadratic objective
+function measuring optimality, and Gaussian noise corruption (both the
+process noise and the measurement noise).  On the other hand, a hidden
+Markov filter applies with a finite-state model of the process. These
+restrictions unacceptably constrain usable models for our application
+area, and therefore we will focus on approximately optimal
+alternatives.
 
+Several specific approximations merit mention.  An extended Kalman
+filter linearizes the state space around each sample point allowing
+the calculations behind the Kalman filter to proceed. The
+approximation works well when the optimal distributions for state
+remain close to Gaussian.  If they do not, the Extended Kalman Filter
+can perform poorly.  A second approximation, a grid-based filter,
+approximates the state space with a finite grid of points allowing the
+calculations behind a hidden (finite) Markov filter to proceed.  A
+grid-based filter works well for the lowest dimensional state spaces,
+but becomes intractable when the dimensions becomes even slightly
+higher.  In preliminary investigations of the main problem that
+motivated this review [reseach paper in prepapration], one and two
+targets worked well (each adding two dimensions to the state), whereas
+three targets did not.
 
-Kalman filtering
-Finite HMM
-optimal filtering in general
-Grid approximation
 Particle filtering
 
 \section{Active sensing}
 
 \section{Reinforcement Learning}
-
-\section{A Heirarchy of Models}
-
-We propose models of the battlefield together with capabilties of each
-side.  However, we aim to make our method successful against a
-real-world adversary on a real-world battlefield, not just against one
-particular model adversary on one particular model battlefield.  The
-approach we suggest implements a heirarchy of models, from trivial to
-complex.  For the purposes of the exposition, we illustrate just a few
-pieces of this heirarchy.
-
-We [at Data Machines Corporation (DMC)] previously supported a
-simulation environment (ULTRA) to train human commanders to take a
-city from an adversary.  The simulation platform (developed outside of
-DMC) showed stunning complexity and realism in its details.  It
-included electronic warfare as well as a large array of other features
-of the conflict.
-
-One might conceive of the following challenge in Artificial
-Intelligence: consistently beat at ULTRA the best human players of
-ULTRA.  In this sense, ULTRA finds an analog with the dizzyingly
-complex game StarCraft II, cracked several years ago by reseachers at
-DeepMind \cite{vinyals2019grandmaster}.  That said, for electronic
-warfare, we care about something harder: we care not just that we can
-beat the best human opponents in the game, but more importantly we
-care that we can beat our future adversaries on real-world
-battlefields.
-
-A bot that excels against human players of ULTRA has merit as a goal,
-but we must worry that that in training against ULTRA will train for
-any peculiarities of the game that do not exist in the real world---if
-any such peculiarities actually exist in the game.  To counter this
-possibility, our approach trains our bots against a wide variety of
-scenarios---both complex scenarios within ULTRA, and simple, even
-trivial, ones outside of ULTRA.  Simple and trivial scenarios, while
-in themselves will not win a war, can lead to insight about what
-happens in training, which makes a step in that direction.
-
-Several specific approximations merit mention.  An extended Kalman filter linearizes the state space around each sample point allowing the calculations behind the Kalman filter
-to proceed. The approximation works well when the optimal distributions for state
-remain close to Gaussian.  If they do not, the Extended Kalman Filter can perform
-poorly.  A second approximation, a grid-based filter, approximates the state space with
-a finite grid of points allowing the calculations behind a hidden (finite) Markov filter to
-proceed.  A grid-based filter works well for the lowest dimensional state spaces, but becomes intractable when the dimensions becomes even slightly higher.  In preliminary investigations of the main problem considered by this paper [in prepapration], one and two targets worked well (each adding two dimensions to the state) whereas three targets did not.
-
-\section{Even trivial scenarios reveal complexities}
-
-\section{A moderately complex model}
-The field of interest is a square in the Euclidean plane.  In this
-field, there is a ``source,'' or ``sender,'' labeled $S$, a receiver,
-labeled $R$, and $n$ different ``jammers,'' labeled $J_1, \dots, J_n$.
-We do not assume that the ability to communicate is symmetric---a
-separate calculation is needed when the roles of sender and receiver
-are reversed.  Additionally there are $m$ different comms to
-facilitate communication.
-
-\section{Optimal Placement Of Comms}
-
-Let $c_i$ denote positions of comms and let $j_k$ denote positions
-position of jammers.  If these quantities are known, we can compute
-the probability of a successful communication between the headquarters
-and an asset (see more details below).  We denote this probability
-
-$$P(\mbox{transmission}|c_i,j_k)$$
-
-Some choices still need to be made about how this probability will be
-computed, but it shouldn't be hard.  By total probability,
-
-$$P(\mbox{transmission}|c_i) = \sum_k P(\mbox{transmission}|c_i,j_k)
-  P(j_k)$$
-
-It is a sum rather than an integral because we only consider grid
-points as possible locations.  That may need to be generalized.  The
-second factor of each term in the sum is the posterior probability
-already coded for computation and described below.
-
-A final step in the computation is a optimization over the comm
-positions $c_i$.
-
-\section{TL;DR}
-Let $P_{j}(d_j)$ be the power of jammer $j$ at the receiver, at
-distance $d_j$.  Let $P_S(d_S)$ be power of the source at the
-receiver, at distance $d_S$.  Let $P_N$ be the power of the ambient
-noise.
-
-These functions are given by $P_j = \frac{M_j}{d_j^2}$, for $j = 1,
-\dots, n$ and $P_S = \frac{M_S}{d_S^2}$; $P_N$ is a constant.
-
-The probability of a successful transmission is given by
-
-$$\mbox{sigmoid}\left( 10 \log_{10}\left(\frac{P_S(d_S)}{P_1(d_1) +
-  P_2(d_2) + \dots + P_n(d_n) + P_N} \right) \right)$$
-
-The quantity in the sigmoid is the strength expressed in decibels, of
-the signal against the background that includes all jammers and the
-ambient noise, see Equation (1) in reference \cite{parlin2018jamming}
-
-\section{Some thoughts about the man-in-the-middle}
-Billy had alerted us to the fact that it was more than just distance
-to jammer--jammers in the line of sight were more potent than those
-off of it.
-
-I spent a long time trying to justify putting this feature explicitly
-in the model.  But the model above seemed most consistent with what I
-was reading in the literature and it made sense.  It is distance to
-receiver that matters.  A man in the middle generally will jam the
-receiver, unless distances are great enough, the ambient noise is
-small enough, and the proportionality constant of the jammer is small
-enough compared to the proportionality constant of the sender.  This
-makes sense to me.
-
-There is such a thing as electomagnetic interferece.  According to
-Wikipedia: ``The effect of unwanted energy due to one or a combination
-of emissions, radiations, or inductions upon reception in a
-radiocommunication system, manifested by any performance degradation,
-misinterpretation, or loss of information which could be extracted in
-the absence of such unwanted energy.'' My reading of this is this:
-interference happens upon the reception of the signal, in the circuits
-of a radiocommunication system, not with signal itself.
-Electomagnetic waves don't interact, as far as I am aware, but it can
-be impossible to pick out the signal in the noise.
-
-Having said all that, a directional receiving antenna would sharpen
-the effect of a man-in-the-middle jammer, versus one off to the side,
-but for the moment I'm keeping it simple and assuming the antennae
-have no preferred direction.  Could change that next, though, by
-assuming they are optimally directed to receive the signal in a
-particular orientation, and to reject signals in substantially
-different directions.
-
-\section{Power}
-
-The power of the radio signal from a point source at a distance $r$ is
-given by (assuming the free-space propagation loss model):
-$$P_{\mbox{signal}}(d) = \frac{M}{d^2},$$ where $M$ is a
-proportionality constant that depends on units, and even with the same
-units, can be different for different senders.  Note that $M$ is the
-power of the signal at distance 1.  The value of $M$ may be know for
-friendlies but need to be extimated for jammers.  Equation (1) in
-reference \cite{benner1996effects}, showed a similar equation for
-``path loss'' relaxing the free-space propagation loss model with a
-proportionality exponent possibly different from 2.  It seems that the
-units of distance are important in this model---see reference
-\cite{benner1996effects}. I note this observation for the future as I
-intend to use the free-space propagation loss model for now.
-
-
-Equation (5) in reference \cite{xu2007adjusting} gives
-$$M = \frac{P_T G_T G_R}{4 \pi},$$ where $P_T$ is the power of the
-transmitter, $G_T$ is the gain of the transmitter in the direction of
-the receiver, and $G_R$ is the gain of the receiver in the direction
-of the transmitter.  Presumably the transmitter could be either the
-jammer or the source.  Reference \cite{benner1996effects}, gives a
-similar equation that may not be entirely consistent that has a
-dependence on wavelength, Equation (1).  The basic thing I get from
-this is kind of obvious for anyone raised in the era before cable
-television---it depends on the orientation of the anntena how strong
-the signal.  Again, I am just putting this observation in this
-document for the future.  For the first cut the power received by the
-anntena is just a function of the distance to the transmitter, not the
-orientation of the antenna.
-
-\section{Jamming}
-
-One reference I have \cite{xu2007adjusting} talks about channel
-capacity as the maximum bit rate $S \rightarrow R$, under the
-assumption of error correcting codes, etc.  So it seems in this
-paradigm that it is not whether you are jammed or not, but how many
-bits get through per second.  In several references, including this
-one there is a noise term which adds power to the jammer in a
-symmetric way.  When the decibels in the equation above drops below
-the 0, the channel capacity falls below the bandwidth of the channel.
-
-I am going to ignore the details of channel capacity and error
-correcting codes and just say probability of transmission is a
-function of the ratio of the powers of signal to background, expressed
-as a sigmoid of decibels.
 
 \nocite{*}
 \bibliographystyle{ieeetr}
