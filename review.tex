@@ -8,9 +8,9 @@
   aircraft for communications and jamming (electronic warfare) and
   review the literature relevant to this problem. Some work
   offers approximately optimal solutions to related problems in
-  different domains, while still promising applicability to the
-  important scenario considered here.  Other work suggests ways of
-  making these extensions.
+  different domains---promising applicability to the
+  important scenarios considered here.  Other work covers methods that
+  we may find useful in extending these relevant solutions.
   
   The problem we address lies within the fields of adversarial
   Multi-Agent Reinforcement Learning (MARL) and active sensing.  In
@@ -27,8 +27,9 @@
   for best sensory performance and localization (active sensing).
   Moreover, the ground troops of each side, when also positioned
   appropriately, have the possibility of shooting down any of their
-  adversary's UAVs.  Finally, the blue side must simultaneously
+  adversary's UAVs.  The blue side must simultaneously
   achieve its objective of keeping units on the ground in
+  communication and the red side must simultaneously try to jam this
   communication.  Despite best efforts, different units/UAVs can fall
   in and out of communication with their respective headquarters,
   making each of the blue and red factions a multi-agent collection,
@@ -36,10 +37,10 @@
   fight its adversary having opposing goals.
 
   Our contribution poses this problem while pointing to literature for
-  possible ideas for moving the field forward.  Finally, we consider a
+  possible ideas for moving the field forward.  We discuss the use of a
   heirarchy of simpler-than-reality mini-games for efficiently
-  investigating solutions leading to a successful implementation for
-  the full adversarial problem in real-world combat.}
+  investigating and building upon solutions leading to a successful
+  implementation for the full adversarial problem in real-world combat.}
 
 \section{Introduction}
 
@@ -65,29 +66,27 @@ autonomously ordering and carrying out flight and communications-
 electronics operation instructions (CEOI) to optimally achieve its
 objectives.  We are interested in the strategies for both sides,
 because to defeat our enemy, we must understand the intelligent
-countermeasures they may take. Moreover, in a real war, our side may
+countermeasures they may take. Moreover, in a real war, our side---as
+well as theirs---may
 choose to fly both comms and jammers, requiring strategies for both
 roles.
 
 Much recent literature has tackled the problem of optimal search and
-rescue, and several similar scenarios---notably cyber-security and
-precision farming.  Search and rescue clearly relates to the problem
+rescue.  Other work has considered different scenarios requiring similar 
+tools---notably cyber-security and precision farming.  CITE 3.
+Search and rescue clearly relates to the problem
 at hand because, as with rescue, each of our sides benefits from
 successfully inferring the positions of targets.  But there is a
 difference between search and rescue and electronic warfare.  People
-being rescued presumably want to be found and will presumably
-cooperate with this effort.  But in electronic warfare participants
-always aim to keep their locations from the other side. As a result,
+being rescued presumably want to be found and will presumably cooperate 
+with this effort.  In electronic warfare, on the other hand, participants
+always aim to keep their locations hidden from the other side. As a result,
 while search and rescue can succeed with a purely active sensing and
 optimal control solution, in our scenario, we need to learn to counter
 an opponent's strategy.  To this end, we propose to apply artificial
 intelligence: specifically, adversarial multi-agent reinforcement
-learning.
-
-This paper reviews the literature relevant to our problem in
-electronic warfare, but will close with a very brief discussion
-presenting ideas for applying this work to other domains of interest
-to us, notably cyber-security.
+learning. This paper reviews the literature relevant to this approach to
+electronic warfare.
 
 \section{A Heirarchy of Models}
 
