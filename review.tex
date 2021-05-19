@@ -101,20 +101,21 @@ Equation and Bayes Rule.
 Unfortunately, solving each of these equations demands an integration
 which remains impossible to perform exactly (ie without
 discretizatiom) in all but two cases.  In all other cases, a
-researcher must settle for an approximation---a suboptimal (but hopefully
-still \emph{approximately} optimal) filter.  Readers will find that the rest of the
-nonlinear filtering textbooks (the rest beyond the first few pages devoted to
-the optimal exposition) develop these suboptimal approximations.
+researcher must settle for an approximation---a suboptimal (but
+hopefully still \emph{approximately} optimal) filter.  Readers will
+find that the rest of the nonlinear filtering textbooks (the rest
+beyond the first few pages devoted to the optimal exposition) develop
+these suboptimal approximations.
 
-We list the two truely optimal solutions to the filtering equation as (1) the
-Kalman filter, and (2) the hidden Markov filter.  The Kalman filter
-applies with a linear model of the process, a quadratic objective
-function measuring optimality, and Gaussian noise corruption (both the
-process noise and the measurement noise).  On the other hand, a hidden
-Markov filter applies with a finite-state model of the process. These
-restrictions unacceptably constrain usable models for our application
-area, and therefore we will focus on approximately optimal
-alternatives.
+We list the two truely optimal solutions to the filtering equation as
+(1) the Kalman filter, and (2) the hidden Markov filter.  The Kalman
+filter applies with a linear model of the process, a quadratic
+objective function measuring optimality, and Gaussian noise corruption
+(both the process noise and the measurement noise).  On the other
+hand, a hidden Markov filter applies with a finite-state model of the
+process. These restrictions unacceptably constrain usable models for
+our application area, and therefore we will focus on approximately
+optimal alternatives.
 
 Several specific approximations merit mention.  An extended Kalman
 filter linearizes the state space around each sample point allowing
@@ -131,9 +132,17 @@ motivated this review [reseach paper in prepapration], one and two
 targets worked well (each adding two dimensions to the state), whereas
 three targets did not.
 
-Papers and textbooks call the last class of approximations that deserves our attention "particle filters."  In short, the idea approximates evolving distributions with a 
-finite swarm of Monte Carlo sample points called particles.  These methods possess
-great generality and flexibility.  Many researchers find particle methods harder to understand and successfully implement than their simpler cousins.  There exist many different ways to implement particle filters, each with its own benefits and limitations.  We will discuss these methods further in the next section, as several papers concerning Active Sensing use particle filters.
+Papers and textbooks call the last class of approximations that
+deserves our attention "particle filters."  In short, the idea
+approximates evolving distributions with a finite swarm of Monte Carlo
+sample points called particles.  These methods possess great
+generality and flexibility, but many researchers find particle methods
+more difficult to understand, and to successfully implement, than
+their simpler and more straightforward cousins.  Note that there exist
+many different ways to implement particle filters, each with its own
+benefits and limitations.  We will discuss these methods further in
+the next section, as several papers concerning Active Sensing use
+particle filters.
 
 \section{Active sensing}
 
