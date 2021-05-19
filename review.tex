@@ -89,6 +89,18 @@ learning. This paper reviews the literature relevant to this approach to
 electronic warfare.
 
 \section{Optimal and suboptimal filtering}
+The filtering problem takes measurements of a stochastic system---possibly
+transformed measurements and possibly with noise---and produces estimates of
+the state of the system.
+
+Readers will find the optimal solution to this problem in the first pages of any textbook CITE on nonlinear filtering: a recursion consisting of alternating applications of the Chapman-Kolmogorov Equation and Bayes Rule.  
+
+Unfortunately, solving each of these equations demands an integration which remains impossible to perform exactly (ie without discretizatiom) in all but two cases.  In all other cases, a researcher must use an approximation---a suboptimal (hopefully approximately optimal) filter.  Readers will find that the rest of the nonlinear filtering textbooks (beyond the first few pages devoted to the optimal exposition) concerns these suboptimal approximations.
+
+We list the two optimal solutions to the filtering equation as (1) the Kalman filter, and (2) the hidden Markov filter.  The Kalman filter applies with a linear model 
+of the process, a quadratic objective function measuring optimality, and Gaussian noise corruption (both the process noise and the measurement noise).  On the other hand, a hidden Markov filter applies with a finite-state model of the process. These restrictions unacceptably constrain usable models for our application area, and therefore we will focus on approximately optimal alternatives.
+
+
 Kalman filtering
 Finite HMM
 optimal filtering in general
@@ -135,6 +147,13 @@ scenarios---both complex scenarios within ULTRA, and simple, even
 trivial, ones outside of ULTRA.  Simple and trivial scenarios, while
 in themselves will not win a war, can lead to insight about what
 happens in training, which makes a step in that direction.
+
+Several specific approximations merit mention.  An extended Kalman filter linearizes the state space around each sample point allowing the calculations behind the Kalman filter
+to proceed. The approximation works well when the optimal distributions for state
+remain close to Gaussian.  If they do not, the Extended Kalman Filter can perform
+poorly.  A second approximation, a grid-based filter, approximates the state space with
+a finite grid of points allowing the calculations behind a hidden (finite) Markov filter to
+proceed.  A grid-based filter works well for the lowest dimensional state spaces, but becomes intractable when the dimensions becomes even slightly higher.  In preliminary investigations of the main problem considered by this paper [in prepapration], one and two targets worked well (each adding two dimensions to the state) whereas three targets did not.
 
 \section{Even trivial scenarios reveal complexities}
 
