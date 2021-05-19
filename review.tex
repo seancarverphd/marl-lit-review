@@ -101,12 +101,12 @@ Equation and Bayes Rule.
 Unfortunately, solving each of these equations demands an integration
 which remains impossible to perform exactly (ie without
 discretizatiom) in all but two cases.  In all other cases, a
-researcher must use an approximation---a suboptimal (hopefully
-approximately optimal) filter.  Readers will find that the rest of the
-nonlinear filtering textbooks (beyond the first few pages devoted to
-the optimal exposition) concerns these suboptimal approximations.
+researcher must settle for an approximation---a suboptimal (but hopefully
+still \emph{approximately} optimal) filter.  Readers will find that the rest of the
+nonlinear filtering textbooks (the rest beyond the first few pages devoted to
+the optimal exposition) develop these suboptimal approximations.
 
-We list the two optimal solutions to the filtering equation as (1) the
+We list the two truely optimal solutions to the filtering equation as (1) the
 Kalman filter, and (2) the hidden Markov filter.  The Kalman filter
 applies with a linear model of the process, a quadratic objective
 function measuring optimality, and Gaussian noise corruption (both the
@@ -125,13 +125,15 @@ can perform poorly.  A second approximation, a grid-based filter,
 approximates the state space with a finite grid of points allowing the
 calculations behind a hidden (finite) Markov filter to proceed.  A
 grid-based filter works well for the lowest dimensional state spaces,
-but becomes intractable when the dimensions becomes even slightly
+but becomes intractable when the dimensions become even slightly
 higher.  In preliminary investigations of the main problem that
 motivated this review [reseach paper in prepapration], one and two
 targets worked well (each adding two dimensions to the state), whereas
 three targets did not.
 
-Particle filtering
+Papers and textbooks call the last class of approximations that deserves our attention "particle filters."  In short, the idea approximates evolving distributions with a 
+finite swarm of Monte Carlo sample points called particles.  These methods possess
+great generality and flexibility.  Many researchers find particle methods harder to understand and successfully implement than their simpler cousins.  There exist many different ways to implement particle filters, each with its own benefits and limitations.  We will discuss these methods further in the next section, as several papers concerning Active Sensing use particle filters.
 
 \section{Active sensing}
 
