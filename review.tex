@@ -22,26 +22,23 @@
   (UAV) becomes a comm or a jammer when fitted for one of these
   purposes.
 
-  Each faction lacks access to the state of the opposing side, and
-  must infer this state probabilisticly through positioning its fleet
-  for best sensory performance and localization (active sensing).
-  Moreover, the ground troops of each side, when also positioned
-  appropriately, have the possibility of shooting down any of their
-  adversary's UAVs.  The blue side must simultaneously achieve its
-  objective of keeping units on the ground in communication and the
-  red side must simultaneously try to jam this communication.  Despite
-  best efforts, different units/UAVs can fall in and out of
-  communication with their respective headquarters, making each of the
-  blue and red factions a multi-agent collection, fully cooperating
-  among itself, but with different information, to fight its adversary
-  having opposing goals.
-
-  Our contribution poses this problem while pointing to literature for
-  possible ideas for moving the field forward.  We discuss the use of
-  a heirarchy of simpler-than-reality mini-games for efficiently
-  investigating and building upon solutions leading to a successful
-  implementation for the full adversarial problem in real-world
-  combat.}
+  Each faction lacks knowledge and access to the state of the opposing
+  side, but benefits from inferring this state probabilisticly through
+  positioning its fleet for best sensory performance and localization
+  (active sensing).  This maneuvering should take into account the
+  real possibility of any UAV getting shot down by its adversary's
+  ground troops if appropriately positioned.  That said, the objective
+  of each side should remain foremost.  The blue side aims to
+  simultaneously keep all units in communication while the red side
+  aims to simultaneously jam this communication.  Despite best
+  efforts, different units/UAVs can fall in and out of communication
+  with their respective headquarters, making each of the blue and red
+  factions a multi-agent collection, fully cooperating among itself,
+  despite different information, to fight its adversary having
+  opposing goals.  Our contribution poses this problem while pointing
+  to literature for possible ideas for moving the field forward
+  towards a successful implementation for the full adversarial problem
+  in real-world combat.}
 
 \section{Introduction}
 
@@ -71,68 +68,81 @@ countermeasures they may take. Moreover, in a real war, our side---as
 well as theirs---may choose to fly both comms and jammers, requiring
 strategies for both roles.
 
-Much recent literature has tackled the problem of optimal search and
-rescue.  Other work has considered different scenarios requiring
-similar tools---notably cyber-security and precision farming.  CITE 3.
-Search and rescue clearly relates to the problem at hand because, as
-with rescue, each of our sides benefits from successfully inferring
-the positions of targets.  But there is a difference between search
-and rescue and electronic warfare.  People being rescued presumably
-want to be found and will presumably cooperate with this effort.  In
-electronic warfare, on the other hand, participants always aim to keep
-their locations hidden from the other side. As a result, while search
-and rescue can succeed with a purely active sensing and optimal
-control solution, in our scenario, we need to learn to counter an
-opponent's strategy.  To this end, we propose to apply artificial
+Recent literature has tackled the problem of near-optimal search and
+rescue \cite{hoffmann2009mobile} and other related search and
+localization paradigms \cite{ryan2010particle, tisdale2008multiple,
+  gustafsson2002particle}.  Other work has considered different
+applications requiring similar tools---notably cyber-security
+\cite{nicholson2007information} and precision farming
+\cite{testi2020reinforcement}.  Search and rescue, for example,
+clearly relates to the problem at hand because, as with rescue, each
+side in our conflict clearly benefits from successfully inferring the
+positions of targets on the other side.  But there is a difference
+between search and rescue and electronic warfare.  People being
+rescued presumably want to be found and will presumably cooperate with
+this effort.  In electronic warfare, on the other hand, targets aim to
+conceal their true locations from their adversaries. As a result,
+while search and rescue can succeed with a purely active sensing and
+optimal control solution, in our scenario, we need to learn to counter
+an opponent's strategy.  To this end, we propose to apply artificial
 intelligence: specifically, adversarial multi-agent reinforcement
 learning. This paper reviews the literature relevant to this approach
-to electronic warfare.
+to victory.
 
-\section{Optimal and suboptimal filtering}
+\section{Optimal and sub-optimal filtering}
 The filtering problem takes measurements of a stochastic
 system---possibly transformed measurements and possibly with
 noise---and produces estimates of the state of the system.
 
 Readers will find the optimal solution to this problem in the first
-pages of any textbook CITE on nonlinear filtering: a recursion
-consisting of alternating applications of the Chapman-Kolmogorov
-Equation and Bayes Rule.
+pages of many textbooks on nonlinear filtering \cite{ristic2003beyond,
+  crisan2011oxford, smith2013sequential, chopin2020introduction}.  The
+solution implements a recursion consisting of alternating applications
+of the Chapman-Kolmogorov Equation and Bayes Rule.
 
 Unfortunately, solving each of these equations demands an integration
-which remains impossible to perform exactly (ie without
-discretizatiom) in all but two cases.  In all other cases, a
-researcher must settle for an approximation---a suboptimal (but
+remaining provably intractable in most cases---indeed in all but two
+cases that researches have already identified.  In all other cases, a
+researcher must settle for an approximation---a sub-optimal (but
 hopefully still \emph{approximately} optimal) filter.  Readers will
 find that the rest of the nonlinear filtering textbooks (the rest
 beyond the first few pages devoted to the optimal exposition) develop
-these suboptimal approximations.
+these sub-optimal approximations.  All of the methods discussed in
+this section can be found in many such textbooks on filtering, so we
+will not give historical pointers to the literature.
 
-We list the two truely optimal solutions to the filtering equation as
-(1) the Kalman filter, and (2) the hidden Markov filter.  The Kalman
-filter applies with a linear model of the process, a quadratic
-objective function measuring optimality, and Gaussian noise corruption
-(both the process noise and the measurement noise).  On the other
-hand, a hidden Markov filter applies with a finite-state model of the
-process. These restrictions unacceptably constrain usable models for
-our application area, and therefore we will focus on approximately
-optimal alternatives.
+First, we list the two truly optimal solutions to the filtering
+equation as (1) the Kalman filter, and (2) the finite hidden Markov
+filter.  The Kalman filter uses a linear model of the process, a
+quadratic objective function measuring optimality, and Gaussian noise
+corruption (LQG problem) (Gaussian in both the process noise and the
+measurement noise).  On the other hand, a finite hidden Markov filter
+uses a finite-state model of the process. These restrictions
+unacceptably constrain usable models for our application area, and
+therefore we will focus on approximately optimal alternatives.
 
 Several specific approximations merit mention.  An extended Kalman
 filter linearizes the state space around each sample point allowing
 the calculations behind the Kalman filter to proceed. The
-approximation works well when the optimal distributions for state
-remain close to Gaussian.  If they do not, the Extended Kalman Filter
-can perform poorly.  A second approximation, a grid-based filter,
-approximates the state space with a finite grid of points allowing the
-calculations behind a hidden (finite) Markov filter to proceed.  A
-grid-based filter works well for the lowest dimensional state spaces,
-but becomes intractable when the dimensions become even slightly
-higher.  In preliminary investigations of the main problem that
-motivated this review [reseach paper in prepapration], one and two
-targets worked well (each adding two dimensions to the state), whereas
-three targets did not.
+approximation works well when the optimal probability distributions
+for state remain close to Gaussian.  If they do not remain
+approximately Gaussian, the Extended Kalman Filter can perform poorly,
+leading to poor state estimates and impoverished inference.
 
-Papers and textbooks call the last class of approximations that
+A second approximation, a grid-based filter, approximates the state
+space with a finite grid of points allowing the calculations behind a
+hidden (finite) Markov filter to proceed.  A grid-based filter works
+well for the lowest dimensional state spaces, but becomes
+computationally intractable when the dimensions become even slightly
+higher.  In preliminary investigations the electronic warfare problem
+that motivated this review [Carver, research paper in preparation],
+one and two targets worked well (each adding two dimensions, longitude
+and latitude, to the state), whereas three simultaneous targets
+remained expensive beyond reach.  In this work, we aimed to find
+jammers (``targets'') without bearing information from observing
+successful or unsuccessful radio connections to friendlies.
+
+The field calls the last class of filtering approximations that
 deserves our attention "particle filters."  In short, the idea
 approximates evolving distributions with a finite swarm of Monte Carlo
 sample points called particles.  These methods possess great
@@ -146,7 +156,7 @@ particle filters.
 
 \section{Active sensing}
 
-\section{Reinforcement Learning}
+\section{Reinforcement Learning (RL) and Multi-agent RL}
 
 \nocite{*}
 \bibliographystyle{ieeetr}
