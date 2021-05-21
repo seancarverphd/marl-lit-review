@@ -115,11 +115,16 @@ First, we list the two truly optimal solutions to the filtering
 equation as (1) the Kalman filter, and (2) the finite hidden Markov
 filter.  The Kalman filter uses a linear model of the process, a
 quadratic objective function measuring optimality, and Gaussian noise
-corruption (LQG problem) (Gaussian in both the process noise and the
-measurement noise).  On the other hand, a finite hidden Markov filter
-uses a finite-state model of the process. These restrictions
-unacceptably constrain usable models for our application area, and
-therefore we will focus on approximately optimal alternatives.
+corruption (LQG problem).  Gaussian must hold for both the process
+noise and the measurement noise.  The LQG problem asks for state
+estimation whereas the related LQR problem (Linear Quadratic
+Regulator), with the same assumptions, discussed below, demands
+control.
+
+Likewise, a finite hidden Markov filter uses a finite-state model of
+the process. These restrictions unacceptably constrain usable models
+for our application area, and therefore we will focus on approximately
+optimal alternatives.
 
 Several specific approximations merit mention.  An extended Kalman
 filter linearizes the state space around each sample point allowing
@@ -158,23 +163,76 @@ particle filters.
 
 \section{Reinforcement learning and its extensions}
 
-This section spans several disciplines, including reinforement
-learning, deep reinfocement learning, distributional reinforcement
+This section spans several disciplines, including reinforcement
+learning, deep reinforcement learning, distributional reinforcement
 learning, Bayesian reinforcement learning, and multi-agent
 reinforcement learning.
 
 Let us start by defining the terms above.  Reinforcement learning (RL)
-extends machine learning to sequential problems where an agent or
-agents learn to interact with an environment to maximize cumulative
-reward.  Deep RL uses neural networks to represent the functions
+\cite{sutton2018reinforcement, kaelbling1996reinforcement} extends
+machine learning to sequential problems where an agent or agents learn
+to interact with an environment to maximize cumulative reward.  Deep
+RL \cite{li2017deep} uses neural networks to represent the functions
 learned by the agent(s).  Classically, RL implementations deal with
-inevitable uncertainty in represented quantities and maintaining point
-estimates for these quantities.  Distributional RL departs from this
-tradition by maintaining probability distributions for the uncertain
-quantities. If the actor(s) perform Bayesian inference on these
-distributions (as they generally do), the actor implements Bayesian
-RL.  Finally multi-agent RL extends RL to environments that include
-other interacting agents cooperating or competing for reward.
+inevitable uncertainty in represented quantities by maintaining best
+point estimates for these quantities.  Distributional RL
+\cite{osband2018randomized} departs from this tradition by maintaining
+full probability distributions for the uncertain quantities. If the
+actor(s) also perform Bayesian inference on these distributions (as
+they generally do), the actor implements Bayesian RL
+\cite{ghavamzadeh2016bayesian}.  Finally multi-agent RL
+\cite{bucsoniu2010multi} extends RL to environments that include other
+interacting agents cooperating or competing for reward.
+
+A lot of good work exists in classical RL and classical deep RL, but
+we will not review any papers in these fields.  Instead, we would like
+to direct the readers attention to distributional RL, and a slightly
+smaller subset Bayesian RL.  Consider that the target localization and
+active sensing literature of interest represent uncertain quantities
+with distributions, just like distributional RL.
+
+While an RL algorithm could derive point state estimates from
+distributional state information to decide on an action, such an
+approach seems wasteful.  Achieving an optimal solution to the
+electronic warfare problem stands as a worthy ambition for a machine
+learning engineer.  That said, to not using the full distribution
+returned by filtering amounts to giving up on this ambition, or so it seems.
+
+However, the mathematics can sometimes work out so that throwing away
+the distribution for a point estimate succeeds as the optimal solution
+\cite{aastrom2012introduction}.  For example, to control a linear
+regulator, where a quadratic cost function determines optimality,
+corrupted by Gaussian noise, (the LQR problem) the optimal solution
+uses a Kalman filter to produce optimal state estimates, then applies
+the optimal control for a determinisitic regulator with known state
+equal to those optimal state estimates.  In this case, throwing away
+the distribution allowed a simpler but just as good---indeed
+optimal---solution.
+
+A system satisfies the so-called \emph{separation principle} if such a
+statement holds for the system.  But systems do not always satisfy the
+separation principle---those that do stand as the exceptions.  If an
+analyst can get away with invoking the separation principle, the
+calculations greatly simplify.  Indeed, for the LQR problem, the
+solution exists in closed form.
+
+We do not know how well the separation principle applies in our
+problem and we do not know how computationally expensive it will
+become to use purely distributional methods.  The approach we suggest
+applies distributional RL (or more precisely Bayesian RL) to simple
+but related problems first then push the envelope both in terms of the
+complexity of the scenario, and in terms of the approximations used,
+such as the separation principle assuming it applies approximately.
+
+In the LQR problem we have a precise notion of optimality (the
+quadratic cost function) and a proof that the solution presented
+optimizes this conditon.  In our scenario we have neither.  We can
+say, however, that we will apply principles, such as Bayes Rule, that
+researchers in other contexts have shown lead to provably optimal
+solutions.  We can say that ``optimal'' principles underlie our
+methods, rather than that they achieve optimality.  Approaching the
+problem in this way, we hope that our solutions will stand as very
+good, indeed good enough, and perhaps the very best.
 
 \nocite{*}
 \bibliographystyle{ieeetr}
