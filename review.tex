@@ -128,24 +128,26 @@ optimal alternatives.
 
 Several specific approximations merit mention.  An extended Kalman
 filter linearizes the state space around each sample point allowing
-the calculations behind the Kalman filter to proceed. The
-approximation works well when the optimal probability distributions
-for state remain close to Gaussian.  If they do not remain
-approximately Gaussian, the Extended Kalman Filter can perform poorly,
-leading to poor state estimates and impoverished inference.
+the calculations behind the Kalman filter to proceed approximately,
+even when the assumptions for using a Kalman filter do not hold
+exactly. The approximation works well when the optimal probability
+distributions for state remain close to Gaussian.  If they do not
+remain approximately Gaussian, the Extended Kalman Filter can perform
+poorly, leading to poor state estimates and impoverished inference.
 
 A second approximation, a grid-based filter, approximates the state
 space with a finite grid of points allowing the calculations behind a
-hidden (finite) Markov filter to proceed.  A grid-based filter works
-well for the lowest dimensional state spaces, but becomes
-computationally intractable when the dimensions become even slightly
-higher.  In preliminary investigations the electronic warfare problem
-that motivated this review [Carver, research paper in preparation],
-one and two targets worked well (each adding two dimensions, longitude
-and latitude, to the state), whereas three simultaneous targets
-remained expensive beyond reach.  In this work, we aimed to find
-jammers (``targets'') without bearing information from observing
-successful or unsuccessful radio connections to friendlies.
+hidden (finite) Markov filter to proceed, even for infinite state
+spaces.  A grid-based filter works well for the lowest dimensional
+state spaces, but becomes computationally intractable when the
+dimensions become even slightly higher.  In preliminary investigations
+the electronic warfare problem that motivated this review [Carver,
+research paper in preparation], one and two targets worked well (each
+adding two dimensions, longitude and latitude, to the state), whereas
+three simultaneous targets remained expensive beyond reach.  In this
+work, we aimed to find jammers (``targets'') without bearing
+information from observing successful or unsuccessful radio
+connections to friendlies.
 
 The field calls the last class of filtering approximations that
 deserves our attention "particle filters."  In short, the idea
