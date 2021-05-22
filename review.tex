@@ -161,12 +161,30 @@ particle filters.
 
 \section{Active sensing}
 
+Active sensing solves a control problem, and as such has considerable
+overlap with reinforcement learning.  Both use observations to select
+actions with some notion of how to make that selection.  Whereas
+reinforement learning tries to optimize cumulative reward, active
+sensing chooses its action (they call it control) to maximize
+information or, equivalently, minimize entropy.  For example, in
+active sensing for search and rescue, we want to control the sensors
+(choose the action) to best reduce the uncertainty in the target
+locations.
+
+The electronic warfare application that we consider does not have this
+form.  We aim to keep or block communication between units landing
+this problem squarely in the purvue of reinforcement learning.  That
+said, the objective benefits from knowing, even with uncertainty, the
+locations of other side's birds.  Moreover, like with active sensing,
+each side can move its own birds to localize the others'.  Therefore,
+we look to the literature on active sensing for inspriation.
+
 \section{Reinforcement learning and its extensions}
 
 This section spans several disciplines, including reinforcement
 learning, deep reinforcement learning, distributional reinforcement
 learning, Bayesian reinforcement learning, and multi-agent
-reinforcement learning.
+reinforcement learning (see citations below).
 
 Let us start by defining the terms above.  Reinforcement learning (RL)
 \cite{sutton2018reinforcement, kaelbling1996reinforcement} extends
@@ -186,8 +204,8 @@ interacting agents cooperating or competing for reward.
 
 A lot of good work exists in classical RL and classical deep RL, but
 we will not review any papers in these fields.  Instead, we would like
-to direct the readers attention to distributional RL, and a slightly
-smaller subset Bayesian RL.  Consider that the target localization and
+to direct the reader's attention to distributional RL, its slightly
+smaller subset, Bayesian RL.  Consider that the target localization and
 active sensing literature of interest represent uncertain quantities
 with distributions, just like distributional RL.
 
