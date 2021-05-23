@@ -1,6 +1,6 @@
-\documentclass{article} \title{Automomous Control of Aircraft for
-  Communications and Electronic Warfare: The Promises of Recent
-  Artifical Intelligence Literature}
+\documentclass{article}
+\title{Automomous Control of Aircraft for Communications and
+  Electronic Warfare: Insights and Promises of Recent Literature}
 \author{Sean Carver, Ph.D. at Data Machines Corporation}
 \begin{document}
 \maketitle
@@ -191,15 +191,34 @@ reinforcement learning (see citations below).
 Let us start by defining the terms above.  Reinforcement learning (RL)
 \cite{sutton2018reinforcement, kaelbling1996reinforcement} extends
 machine learning to sequential problems where an agent or agents learn
-to interact with an environment to maximize cumulative reward.  Deep
-RL \cite{li2017deep} uses neural networks to represent the functions
-learned by the agent(s).  Classically, RL implementations deal with
-inevitable uncertainty in represented quantities by maintaining best
-point estimates for these quantities.  Distributional RL
-\cite{osband2018randomized} departs from this tradition by maintaining
-full probability distributions for the uncertain quantities. If the
-actor(s) also perform Bayesian inference on these distributions (as
-they generally do), the actor implements Bayesian RL
+to interact with an environment to maximize cumulative reward.
+
+RL shares a sizable overlap with control theory in engineering,
+particularly adaptive control \cite{aastrom2013adaptive,
+  khan2012reinforcement}.  The terminology in engineering differs from
+the terminology in machine learning, but the terms map to each other.
+The ``controller'' (agent) interacts with ``the plant'' (the
+environment) by selecting a ``control'' (an action) that ``minimizes
+cost'' (maximizes reward).  Engineers typically deal with continuous
+systems (ie robotics), whereas many, but not all, reinforcement
+solutions have finite action and state spaces.  Adaptive control,
+moreover, aims more to maintain control when the plant changes, rather
+than to learn to control the plant \emph{de novo}.  Despite cosmetic
+differences, clearly if both systems solve the same problem, and to
+the extent that they solve it optimally, with the same optimality
+criteria, the solutions must coincide.  But the approximations to
+optimality made in each discipline may differ, of course.  We expect
+to find the same pattern when we fold active sensing in with
+reinforcement learning.
+
+Deep RL \cite{li2017deep} uses neural networks to represent the
+functions learned by the agent(s).  Classically, RL implementations
+deal with inevitable uncertainty in represented quantities by
+maintaining best point estimates for these quantities.  Distributional
+RL \cite{osband2018randomized} departs from this tradition by
+maintaining full probability distributions for the uncertain
+quantities. If the actor(s) also perform Bayesian inference on these
+distributions (as they generally do), the actor implements Bayesian RL
 \cite{ghavamzadeh2016bayesian}.  Finally multi-agent RL
 \cite{bucsoniu2010multi} extends RL to environments that include other
 interacting agents cooperating or competing for reward.
@@ -254,7 +273,39 @@ methods, rather than that they achieve optimality.  Approaching the
 problem in this way, we hope that our solutions will stand as very
 good, indeed good enough, and perhaps the very best.
 
-\nocite{*}
+Finally, a multi-agent enviroment such as the one needed for
+electronic warfare consists of actors other than self making decisions
+based on other hidden information.  This becomes an additional wrinkle
+which we must deal with.  Reinforcement learning algorithms divide
+into \emph{model-based} algorithms and \emph{model-free} algorithms.
+The two methods differ in that a model-based algorithm maintains a
+model of the environment and uses this model to select its actions.
+
+Model-based reinforcement learning would fail catastrophically with
+our scenario in the real world.  The model in the model-based
+algorithm would have to include models of all other agents, including
+those of our adversary.  But we must expect that our adversaries will
+exploit any modeling assumptions we make---and posing a model of our
+adversaries requires such assumptions.
+
+The model-free alternative presents itself as an option.  A recent
+comprehensive survey of BRL \cite{ghavamzadeh2016bayesian} discusses
+and develops only two such classes of algorithms in that context:
+\emph{Bayesian Policy Gradient Algorithms} \cite{engel2007bayesian,
+  ghavamzadeh2016abayesian} and \emph{Bayesian Actor-Critic
+  Algorithms} \cite{ghavamzadeh2007bayesian,
+  ghavamzadeh2016abayesian}.  These observations together with our
+preference for BRL, narrow considerably the initially wide field of RL
+algorithms of interest.  That said, it seems that just one set of
+authors has produced most of the work on model-free Bayesian RL, with
+the rest of the community slow to adopt their ideas.  This observation
+gives us cause for concern, but no cause to dismiss their work without
+further investigation.  The path forward appears clear: test BRL with
+simple models, then push the envelope on the complexity of the models,
+finally examine the performance/computational cost trade offs with
+less expensive suboptimal techniques.
+
+% \nocite{*}
 \bibliographystyle{ieeetr}
 % \bibliographystyle{unsrt}
 \bibliography{marl}
