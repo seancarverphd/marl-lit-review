@@ -76,23 +76,24 @@ applications requiring similar tools---notably cyber-security
 \cite{nicholson2007information} and precision farming
 \cite{testi2020reinforcement}.  Search and rescue, for example,
 clearly relates to the problem at hand because, as with rescue, each
-side in our conflict clearly benefits from successfully inferring the
-positions of targets on the other side.  But there is a difference
-between search and rescue and electronic warfare.  People being
-rescued presumably want to be found and will presumably cooperate with
-this effort.  In electronic warfare, on the other hand, targets aim to
-conceal their true locations from their adversaries. As a result,
-while search and rescue can succeed with a purely active sensing and
-optimal control solution, in our scenario, we need to learn to counter
-an opponent's strategy.  To this end, we propose to apply artificial
-intelligence: specifically, adversarial multi-agent reinforcement
-learning. This paper reviews the literature relevant to this approach
-to victory.
+side in our conflict benefits from successfully inferring the
+positions of targets on the other side.  But electronic warfare
+differs from search and rescue.  People being rescued presumably want
+to be found and will presumably cooperate with this effort.  In
+electronic warfare, on the other hand, targets aim to conceal their
+true locations from their adversaries. As a result, while search and
+rescue can succeed with a purely active sensing and optimal control
+solution, in our scenario, we need to learn to counter an opponent's
+strategy.  To this end, we propose to apply artificial intelligence:
+specifically, adversarial multi-agent reinforcement learning. This
+paper reviews the literature relevant to this approach to victory.
 
 \section{Optimal and sub-optimal filtering}
 The filtering problem takes measurements of a stochastic
 system---possibly transformed measurements and possibly with
-noise---and produces estimates of the state of the system.
+noise---and produces estimates of the state of the system.  This
+section reviews classical work on this problem, citing textbooks
+instead of recent papers.
 
 Readers will find the optimal solution to this problem in the first
 pages of many textbooks on nonlinear filtering \cite{ristic2003beyond,
@@ -107,19 +108,21 @@ researcher must settle for an approximation---a sub-optimal (but
 hopefully still \emph{approximately} optimal) filter.  Readers will
 find that the rest of the nonlinear filtering textbooks (the rest
 beyond the first few pages devoted to the optimal exposition) develop
-these sub-optimal approximations.  All of the methods discussed in
-this section can be found in many such textbooks on filtering, so we
-will not give historical pointers to the literature.
+these sub-optimal approximations.
 
 First, we list the two truly optimal solutions to the filtering
 equation as (1) the Kalman filter, and (2) the finite hidden Markov
 filter.  The Kalman filter uses a linear model of the process, a
 quadratic objective function measuring optimality, and Gaussian noise
-corruption (LQG problem).  Gaussian must hold for both the process
-noise and the measurement noise.  The LQG problem asks for state
-estimation whereas the related LQR problem (Linear Quadratic
-Regulator), with the same assumptions, discussed below, demands
-control.
+corruption (LQG problem).  The Gaussian assumption must hold for both
+the process noise and the measurement noise.  The LQG problem divides
+into the linear quadratic estimator (LQE) problem for the optimal
+state estimates and the linear quadratic regulator (LQR) for the
+optimal control of such a system.  As we will see below, the solutions
+of these problems decouple in a surprising and useful way (the
+separation principle, see the last section below) but unfortunately,
+this decoupling makes use of the specific assumptions we have imposed
+here.
 
 Likewise, a finite hidden Markov filter uses a finite-state model of
 the process. These restrictions unacceptably constrain usable models
