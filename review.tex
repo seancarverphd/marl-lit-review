@@ -169,20 +169,24 @@ particle filters.
 Active sensing solves a control problem, and as such has considerable
 overlap with reinforcement learning.  Both use observations to select
 actions with some notion of how to make that selection.  Whereas
-reinforement learning tries to optimize cumulative reward, active
-sensing chooses its action (they call it control) to maximize
-information or, equivalently, minimize entropy.  For example, in
+reinforcement learning tries to optimize cumulative reward, many
+implementations of active sensing choose its action (they call it
+control) to maximize information or, equivalently, minimize entropy,
+in the distributions for the estimated quantities.  For example, in
 active sensing for search and rescue, we want to control the sensors
 (choose the action) to best reduce the uncertainty in the target
 locations.
 
 The electronic warfare application that we consider does not have this
-form.  We aim to keep or block communication between units landing
-this problem squarely in the purvue of reinforcement learning.  That
-said, the objective benefits from knowing, even with uncertainty, the
-locations of other side's birds.  Moreover, like with active sensing,
-each side can move its own birds to localize the others'.  Therefore,
-we look to the literature on active sensing for inspriation.
+form.  We aim not just to locate the other side's birds, but also we
+aim to keep or block communication between blue units.  This
+additional objective lands this problem squarely in the purvue of
+reinforcement learning.  That said, the objective benefits from
+knowing, even with uncertainty, the locations of other side's UAVs.
+Moreover, like with active sensing, each side can move its own fleet
+to localize the other's but, with electronic warfare, it becomes a
+means to the end of meeeting its other objectives.  Therefore, we look
+to the literature on active sensing for inspriation.
 
 \section{Reinforcement learning and its extensions}
 
