@@ -167,26 +167,81 @@ particle filters.
 \section{Active sensing}
 
 Active sensing solves a control problem, and as such has considerable
-overlap with reinforcement learning.  Both use observations to select
-actions with some notion of how to make that selection.  Whereas
-reinforcement learning tries to optimize cumulative reward, many
-implementations of active sensing choose its action (they call it
+overlap with reinforcement learning.  Both domains use observations to
+select actions with some notion of how to make that selection.
+Whereas reinforcement learning tries to optimize cumulative reward,
+many implementations of active sensing choose its action (they call it
 control) to maximize information or, equivalently, minimize entropy,
 in the distributions for the estimated quantities.  For example, in
 active sensing for search and rescue, we want to control the sensors
 (choose the action) to best reduce the uncertainty in the target
 locations.
 
-The electronic warfare application that we consider does not have this
-form.  We aim not just to locate the other side's birds, but also we
-aim to keep or block communication between blue units.  This
-additional objective lands this problem squarely in the purvue of
-reinforcement learning.  That said, the objective benefits from
-knowing, even with uncertainty, the locations of other side's UAVs.
-Moreover, like with active sensing, each side can move its own fleet
-to localize the other's but, with electronic warfare, it becomes a
-means to the end of meeeting its other objectives.  Therefore, we look
-to the literature on active sensing for inspriation.
+The electronic warfare application that we consider does not have
+exactly this form.  We aim not just to locate the other side's birds,
+but also we aim to keep (or for red, block) communication between blue
+units.  This additional objective lands the problem squarely in the
+purvue of reinforcement learning.  That said, the objective of
+electronic warfare benefits from knowing, even with uncertainty, the
+locations of the other side's UAVs.  Moreover, like with active
+sensing, each side can move its own fleet to localize the other's, but,
+with electronic warfare, it becomes a means to the end of meeting its
+other objectives.  Therefore, we look to the literature on active
+sensing only for inspriation.
+
+We start with one representative paper in this field
+\cite{hoffmann2009mobile}, by Hoffman and coauthors.  Hoffmann et al.\
+considers the problem of target localization, with a search and rescue
+application in mind.  They consider a number of mobile sensor vehicles
+(analogous to blue's comms) and a number of fixed-location targets
+(analogous to the red's jammers that blue tries to find by moving its
+comms).  While Hoffmann uses fixed targets, he cites
+\cite{gustafsson2002particle} for a motion model that would
+generalizes his solution to moving targets.  Both of these papers
+advance particle filter solutions.  Hoffmann specifically closes the
+loop with a control that minimizes the uncertainty in the target
+locations.  In that sense, Hoffmann implements an active sensing
+paradigm.
+
+It becomes interesting to consider the consequences of the change in
+objective function needed for our application.  For search and rescue,
+the mobile sensors care only about the uncertainty in the state
+distribution of the targets to move its fleet to localize the targets.
+Our application changes this picture: if there exist directions of
+variation that do not matter as much for the objective of keeping
+targets in communication, our agents may care less about the
+uncertainty in these directions.
+
+We propose to codify the comms and jammers objective function by
+giving a reward to each agent based on which units they succeed in
+directly or indirectly (eg.\ through secondary connections)
+contacting.  Each agent then tries to maximize the cumululative
+discounted expected value of this reward.
+
+Hoffmann considers two cases separately: bearings-only measurements,
+and range-only meausurements.  Both will become useful simplifications
+in our case.  Taking inspiration from Hoffmann, we can test the
+performance of our agents under each of these constraints (ie.\
+bearings-only and range-only measurements) separately, then together
+in both homogeneous and heterogeneous mixtures of constraints across
+sensors.
+
+Extending the work of Hoffmann, Ryan et al. \cite{ryan2010particle}
+use non-trivial models for the sensor dynamics appropriate for
+fixed-wing UAVs that may tens of seconds to execute a maneuver, such
+as a 180 degree turn.  In constrast, the quadrotor robots
+\cite{hoffmann2007quadrotor} of our models have simple dynamics and
+can essentially execute maneuvers in a single time step.  While our
+work will initially consider UAVs of the sort that Hoffmann considers,
+Ryan's paper generalizes the problem statement in an important
+direction in that it removes an assumption about the sensor platforms
+that does hold for the quadrorotor devices we model here, but fails
+for other UAVs, such as fixed-wing aircraft.
+
+Another paper \cite{tisdale2008multiple}, by some of the same authors,
+presents the related particle filter-based unifying approach to search
+and tracking.
+
 
 \section{Reinforcement learning and its extensions}
 
