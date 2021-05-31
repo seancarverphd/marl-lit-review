@@ -62,10 +62,10 @@ so doing best keep or block communications.
 We study the question of how each side can control its fleet by
 autonomously ordering and carrying out flight and communications-
 electronics operation instructions (CEOI) to optimally achieve its
-objectives.  We are interested in the strategies for both sides,
-because to defeat our enemy, we must understand the intelligent
-countermeasures they may take. Moreover, in a real war, our side---as
-well as theirs---may choose to fly both comms and jammers, requiring
+objectives.  We care about strategies for both sides, because to
+defeat our enemy, we must understand the intelligent countermeasures
+they may take. Moreover, in a real war, our side---as well as
+theirs---may choose to fly both comms and jammers, requiring
 strategies for both roles.
 
 Recent literature has tackled the problem of near-optimal search and
@@ -78,15 +78,16 @@ applications requiring similar tools---notably cyber-security
 clearly relates to the problem at hand because, as with rescue, each
 side in our conflict benefits from successfully inferring the
 positions of targets on the other side.  But electronic warfare
-differs from search and rescue.  People being rescued presumably want
-to be found and will presumably cooperate with this effort.  In
-electronic warfare, on the other hand, targets aim to conceal their
-true locations from their adversaries. As a result, while search and
-rescue can succeed with a purely active sensing and optimal control
-solution, in our scenario, we need to learn to counter an opponent's
-strategy.  To this end, we propose to apply artificial intelligence:
-specifically, adversarial multi-agent reinforcement learning. This
-paper reviews the literature relevant to this approach to victory.
+differs from search and rescue.  People needing rescue presumably want
+the search effort to succeed and will presumably not try to block
+attempts to determine their positions.  In electronic warfare, on the
+other hand, targets aim to conceal their true locations from their
+adversaries. As a result, while search and rescue can succeed with a
+purely active sensing and optimal control solution, in our scenario,
+we need to learn to counter an opponent's strategy.  To this end, we
+propose to apply artificial intelligence: specifically, adversarial
+multi-agent reinforcement learning. This paper reviews the literature
+relevant to this approach to victory.
 
 \section{Optimal and sub-optimal filtering}
 The filtering problem takes measurements of a stochastic
@@ -243,61 +244,73 @@ presents the related particle filter-based unifying approach to search
 and tracking.
 
 
-\section{Reinforcement learning and its extensions}
+\section{Reinforcement learning and extensions}
 
 This section spans several disciplines, including reinforcement
 learning, deep reinforcement learning, distributional reinforcement
 learning, Bayesian reinforcement learning, and multi-agent
 reinforcement learning (see citations below).
 
-Let us start by defining the terms above.  Reinforcement learning (RL)
+We start each topic by defining the relevant terms listed above, and
+providing one or more citations.  Reinforcement learning (RL)
 \cite{sutton2018reinforcement, kaelbling1996reinforcement} extends
 machine learning to sequential problems where an agent or agents learn
 to interact with an environment to maximize cumulative reward.
 
-RL shares a sizable overlap with control theory in engineering,
-particularly adaptive control \cite{aastrom2013adaptive,
-  khan2012reinforcement}.  The terminology in engineering differs from
-the terminology in machine learning, but the terms map to each other.
-The ``controller'' (agent) interacts with ``the plant'' (the
-environment) by selecting a ``control'' (an action) that ``minimizes
-cost'' (maximizes reward).  Engineers typically deal with continuous
-systems (ie robotics), whereas many, but not all, reinforcement
-solutions have finite action and state spaces.  Adaptive control,
-moreover, aims more to maintain control when the plant changes, rather
-than to learn to control the plant \emph{de novo}.  Despite cosmetic
-differences, clearly if both systems solve the same problem, and to
-the extent that they solve it optimally, with the same optimality
-criteria, the solutions must coincide.  But the approximations to
-optimality made in each discipline may differ, of course.  We expect
-to find the same pattern when we fold active sensing in with
-reinforcement learning.
+Researchers have solved similar problems in different disciplines.
+Indeed, RL shares a sizable overlap with control theory in
+engineering, including active sensing.  In engineering, adaptive
+control \cite{aastrom2013adaptive, khan2012reinforcement} lies closest
+to RL.  The terminology of engineering differs from the terminology of
+reinforcement learning, but the terms map perfectly to one another.
+The ``controller'' (agent) interacts with the ``plant'' or ``process''
+(the environment) by selecting a ``control'' (action) that ``minimizes
+cost'' (maximizes reward).
+
+Engineers typically deal with continuous systems (ie robotics),
+whereas many, but not all, reinforcement learning solutions have
+finite time steps, finite action spaces, as well as, often, finite
+state spaces.  The treaatment remains essentially the same, but may
+look a little different.  For example, in engineering an analogous
+integral of cost can replace the RL return consisting of a discounted
+accumulation of rewards.
+
+Engineers have fully developed the linear theory, which reinforcement
+learning has barely touched.  In another difference, adaptive control,
+often aims more to maintain control of the plant in the face of
+natural but unpredictable changes, rather than, as aimed for often in
+RL, to learn to control the plant \emph{de novo}.
+
+Despite cosmetic differences, if both systems solve the same problem,
+and to the extent that they solve it optimally---with the same
+optimality criteria---the solutions must tautologically coincide.  But
+the approximations to optimality made in each discipline may differ,
+and the assumptions and problem formulations can also differ, as well.
+Undoubtedly, we would find a similar truth to analogous statements
+made of connections betweeen RL and active sensing.
 
 Deep RL \cite{li2017deep} uses neural networks to represent the
-functions learned by the agent(s).  Classically, RL implementations
-deal with inevitable uncertainty in represented quantities by
-maintaining best point estimates for these quantities.  Distributional
-RL \cite{osband2018randomized} departs from this tradition by
-maintaining full probability distributions for the uncertain
-quantities. If the actor(s) also perform Bayesian inference on these
-distributions (as they generally do), the actor implements Bayesian RL
-\cite{ghavamzadeh2016bayesian}.  Finally multi-agent RL
-\cite{bucsoniu2010multi} extends RL to environments that include other
-interacting agents cooperating or competing for reward.
+functions learned by the agent(s).  Classically, RL implementations,
+including many deep RL implementations, deal with inevitable
+uncertainty in represented quantities by maintaining best point
+estimates for these quantities.  Distributional RL
+\cite{osband2018randomized} departs from this tradition by maintaining
+full probability distributions for the uncertain quantities. If the
+actor(s) also perform Bayesian inference on these distributions (as
+they generally do), the agent implements Bayesian RL
+\cite{ghavamzadeh2016bayesian}.
 
-A lot of good work exists in classical RL and classical deep RL, but
-we will not review any papers in these fields.  Instead, we would like
-to direct the reader's attention to distributional RL, its slightly
-smaller subset, Bayesian RL.  Consider that the target localization and
-active sensing literature of interest represent uncertain quantities
-with distributions, just like distributional RL.
-
-While an RL algorithm could derive point state estimates from
-distributional state information to decide on an action, such an
-approach seems wasteful.  Achieving an optimal solution to the
-electronic warfare problem stands as a worthy ambition for a machine
-learning engineer.  That said, to not using the full distribution
-returned by filtering amounts to giving up on this ambition, or so it seems.
+As an approach to our application, we would like to direct the
+reader's attention to distributional RL, its slightly smaller subset,
+Bayesian RL.  Consider that the target localization and active sensing
+literature of interest represent uncertain quantities with
+distributions, just like distributional RL.  While an RL algorithm
+could derive point state estimates from distributional state
+information to decide on an action, such an approach seems wasteful.
+Achieving an optimal solution to the electronic warfare problem stands
+as a worthy, if impossible, ambition for a machine learning engineer.
+That said, to not use the full distribution returned by filtering
+amounts to giving up on this ambition, or so it seems.
 
 However, the mathematics can sometimes work out so that throwing away
 the distribution for a point estimate succeeds as the optimal solution
@@ -305,43 +318,76 @@ the distribution for a point estimate succeeds as the optimal solution
 regulator, where a quadratic cost function determines optimality,
 corrupted by Gaussian noise, (the LQR problem) the optimal solution
 uses a Kalman filter to produce optimal state estimates, then applies
-the optimal control for a determinisitic regulator with known state
-equal to those optimal state estimates.  In this case, throwing away
-the distribution allowed a simpler but just as good---indeed
-optimal---solution.
+the optimal control for a determinisitic regulator assuming a
+``known'' state equal to those optimal state estimates.  In this case,
+throwing away the distribution allows a simpler, more parisimonious,
+and indeed still fully optimal solution.
 
 A system satisfies the so-called \emph{separation principle} if such a
-statement holds for the system.  But systems do not always satisfy the
-separation principle---those that do stand as the exceptions.  If an
-analyst can get away with invoking the separation principle, the
-calculations greatly simplify.  Indeed, for the LQR problem, the
-solution exists in closed form.
+separation between estimation and control holds for the system.  But
+systems do not always satisfy the separation principle---those that do
+stand as the exceptions.  If an analyst can get away with invoking the
+separation principle, the calculations greatly simplify.  Indeed, for
+the LQR problem, the solution exists in closed form.
 
 We do not know how well the separation principle applies in our
 problem and we do not know how computationally expensive it will
 become to use purely distributional methods.  The approach we suggest
-applies distributional RL (or more precisely Bayesian RL) to simple
-but related problems first then push the envelope both in terms of the
-complexity of the scenario, and in terms of the approximations used,
-such as the separation principle assuming it applies approximately.
+applies distributional RL (or, more precisely, Bayesian RL) to
+simplified versions of the problems first, then push the envelope both
+in terms of the complexity of the scenario, and in terms of the
+approximations used---such as the separation principle hoping that it
+applies approximately.
 
 In the LQR problem we have a precise notion of optimality (the
 quadratic cost function) and a proof that the solution presented
-optimizes this conditon.  In our scenario we have neither.  We can
-say, however, that we will apply principles, such as Bayes Rule, that
-researchers in other contexts have shown lead to provably optimal
-solutions.  We can say that ``optimal'' principles underlie our
-methods, rather than that they achieve optimality.  Approaching the
-problem in this way, we hope that our solutions will stand as very
-good, indeed good enough, and perhaps the very best.
+optimizes this condition.  In our comms and jammers scenario we have
+neither.  We could say, however, that we will apply principles, such
+as Bayes Rule, that researchers in other contexts have shown lead to
+provably optimal solutions.  In that sense we could say that
+``optimal'' principles underlie our methods, rather than that our
+solutions achieve optimality.  Approaching the problem in this way, we
+hope that our solutions will stand as very good, indeed good enough,
+and perhaps even the very best.
 
-Finally, a multi-agent enviroment such as the one needed for
-electronic warfare consists of actors other than self making decisions
-based on other hidden information.  This becomes an additional wrinkle
-which we must deal with.  Reinforcement learning algorithms divide
-into \emph{model-based} algorithms and \emph{model-free} algorithms.
-The two methods differ in that a model-based algorithm maintains a
-model of the environment and uses this model to select its actions.
+Finally multi-agent RL \cite{bucsoniu2010multi} extends RL to
+environments that include other interacting agents cooperating or
+competing for reward.  The definition of ``multi-agent'' given the
+introduction to \cite{shoham2008multiagent} requires that the agents have
+different information, different interests (quantified as reward), or
+both.
+
+By this definition, Hoffmann's implementation of search and rescue
+\cite{hoffmann2009mobile}, discussed above, does \emph{not} qualify as
+a multi-agent system because (1) all agents share all relevant
+information over a radio channel, and (2) they all have the same
+interests in localizing the target(s).  This conclusion holds even
+though each sensor platform behaves independently of the others and
+performs its own calculations (which, because of shared information,
+the authors expect to remain identical to the calculations of the
+other agents, as the search proceeds).
+
+On the other hand, our comms and jammers implementation does land
+squarely in the multi-agent camp because the red and blue side
+certainly have different interests, and moreover, barring unmodeled
+espionage, have different information.  Even within each faction,
+while the individual blue and red units may have the same interests as
+others with the same color, and typically will share information anong
+others of the same side, they may still find themselves out of
+communication with their compatriots, and therefore suffer from the
+need to overcome different information.
+
+A multi-agent environment, such as the one needed for electronic
+warfare, includes actors---some of which have diametrically opposed
+interests---making decisions based on information hidden from other
+actors.  This reality becomes an additional wrinkle which we must deal
+with, concerning especially the possibility of success with
+programming our drones to model the environment.
+
+Reinforcement learning algorithms divide into \emph{model-based}
+algorithms and \emph{model-free} algorithms.  The two methods differ
+in that a model-based algorithm maintains a model of the environment
+and uses this model to select its actions.
 
 Model-based reinforcement learning would fail catastrophically with
 our scenario in the real world.  The model in the model-based
@@ -350,22 +396,87 @@ those of our adversary.  But we must expect that our adversaries will
 exploit any modeling assumptions we make---and posing a model of our
 adversaries requires such assumptions.
 
-The model-free alternative presents itself as an option.  A recent
-comprehensive survey of BRL \cite{ghavamzadeh2016bayesian} discusses
-and develops only two such classes of algorithms in that context:
-\emph{Bayesian Policy Gradient Algorithms} \cite{engel2007bayesian,
-  ghavamzadeh2016abayesian} and \emph{Bayesian Actor-Critic
-  Algorithms} \cite{ghavamzadeh2007bayesian,
-  ghavamzadeh2016abayesian}.  These observations together with our
-preference for BRL, narrow considerably the initially wide field of RL
-algorithms of interest.  That said, it seems that just one set of
-authors has produced most of the work on model-free Bayesian RL, with
-the rest of the community slow to adopt their ideas.  This observation
-gives us cause for concern, but no cause to dismiss their work without
-further investigation.  The path forward appears clear: test BRL with
-simple models, then push the envelope on the complexity of the models,
-finally examine the performance/computational cost trade offs with
-less expensive suboptimal techniques.
+The model-free alternative presents itself as an option.  Within
+Bayesian reinforcement learning, a recent comprehensive survey of BRL
+\cite{ghavamzadeh2016bayesian} discusses and develops only two such
+classes of algorithms in that context: \emph{Bayesian Policy Gradient
+  Algorithms} \cite{engel2007bayesian, ghavamzadeh2016abayesian} and
+\emph{Bayesian Actor-Critic Algorithms} \cite{ghavamzadeh2007bayesian,
+  ghavamzadeh2016abayesian}.  Of these two possibilities the authors
+of \cite{ghavamzadeh2016bayesian} caution that their Bayesian actor
+critic implementation takes advantage of the Markov property, but that
+the Bayesian policy gradient algorithm does not make this assumption
+and stands appropriate for partially observed problems including
+Markov games.
+
+These constraints, together with our preference for BRL, narrow, to a
+single option, the initially wide field of RL algorithms of interest
+along this path.  However, there remain other trade offs to consider,
+so we should not focus on purely Bayesian methods.  Indeed, it seems
+that just one set of authors has produced most of the work on
+model-free Bayesian RL, with the rest of the community slow to adopt
+these (admittedly somewhat recent) ideas.  Moreover while these
+authors discuss applying their methods in a multi-agent framework,
+they intend their work mostly for single-agent.  They concede that
+their methods require a posterior over the policies of other, which
+may remain tractable in some case, like agents having independent
+policies, but it seems that for us this simplifications will remain
+invalid.  The authors also mention a myopic (1-step) look ahead on the
+value function and cite \cite{dearden1998bayesian}, an article about
+Q-learning.  It remains unclear whether these techniques have the
+capabilities of methods intended for and tested on primarily
+multi-agent environments.  Still these techniques merit a close look
+and understanding.
+
+Both the Bayesian Policy Gradient and the Bayesian Actor Critic
+methods model the time varying gradient of the objective function used
+for training the policy (specifically, the expected discounted return)
+as a continuous Gaussian process (GP), a type of stochastic process.
+A GP assumes that all its finite dimensional distributions (ie.\ the
+joint of finitely many sample points, with the rest marginalized) have
+a multidimensional Gaussian distribution.
+
+With GPs Bayesian policy gradients (and Baysian actor-critic) can
+perform inference on the posterior of the gradient conditioned on the
+data, which allows for the success of the method.  Still it remains
+unclear to what extent the Gaussian process assumption has
+limitations.
+
+For this reasons, together with the lack of support for multi-agent
+systems, we cast a wider net by considering recent work of several
+authors concerning other techniques for multi-agent RL, particualarly
+those specifically intended for adversarial applications.
+
+In a recent paper, Lowe et al. \cite{lowe2017multi} considers an
+actor-critic paradigm, but one that imposes centralized training to
+prepare for decentralized execution.  Lowe and coauthors cite a recent
+body of previous work briefly reviewed in their paper.  In this
+paradigm, for all agents, there exists one single central critic
+trained with the all agents observations (or the whole state), and all
+actions (or all policies) of all agents.  After training, during
+testing and execution no centralizations remain, and each agent
+executes its own decentralized but pre-trained critic.  On the other
+hand, each agent's actors in this paradigm remains always
+decentralized.  Though the actors and never get the benefit of
+centralized training, the success of Lowe's methods apparently depends
+upon consistently decentralized actors.
+
+A second paper by Srinivasan et al., \cite{srinivasan2018actor},
+considers an alternative approach which never centralizes the
+training.  Decentralized training, as with decentralized testing and
+execution, may matter to us if we want to train our agents as they
+perform in the field.  Of course this property matters most in
+situations in which we must adapt and counter, on the fly, to our
+adversaries adapting and countering us.  Indeed Scrinivasan and
+coauthors intend their work for adversarial
+
+A different paper, \cite{su2020counterfactual}, considers multi-agent
+actor-critics in situations where different agents cooperate to
+maintain a graph of two-way connections---a relevant capability for
+comms and jammers within each faction, though, in this paper, without
+the spector of competition from the other side.
+
+Finally Foerster et al....
 
 % \nocite{*}
 \bibliographystyle{ieeetr}
