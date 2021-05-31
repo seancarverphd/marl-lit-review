@@ -374,38 +374,36 @@ other agents, as the search proceeds).
 On the other hand, our comms and jammers implementation does land
 squarely in the multi-agent camp because the blue and red sides
 certainly do have different interests, and moreover, barring unmodeled
-espionage, certainly do have different information.  The two sides
-have not just different interests, but diametrically opposed
-interests.
+espionage, certainly do have different information.  Indeed, the two
+sides do not just have different interests, they have diametrically
+opposed interests.
 
-To reiterate, each faction has its own sensors and uses measurements
-which it hides from its adversaries.  But even within each faction,
-some units can access information that other units cannot.  Indeed,
-the individual blue and red units may yet find themselves out of
-communication with their compatriots.  Thus, even assuming factions
-share interests, they may not always share all information.  As a
-result, there can exist more than two agents (by Shoham's definition)
-in our environment.  These realities become challenging wrinkles which
-we must deal with for success.
+To reiterate, each faction has its own sensors with which it takes
+measurements to share among its team---but hide from its adversaries.
+But even within each faction, some units can access information that
+other units cannot.  Indeed, the individual blue and red units may yet
+find themselves out of communication with their compatriots.  Thus,
+even assuming factions share interests, they may not always share all
+information.  As a result, there can exist more than two agents (by
+the definition Shoham quoted) in our environment.  These realities
+become challenging wrinkles which we must deal with for success.
 
 Reinforcement learning algorithms divide into \emph{model-based}
 algorithms and \emph{model-free} algorithms.  The two methods differ
 in that a model-based algorithm maintains a model of the environment
-and uses this model to select its actions.
-
-Model-based reinforcement learning would fail catastrophically with
-our scenario in the real world.  The model in the model-based
-algorithm would have to include models of all other agents, including
-those of our adversary.  But we must expect that our adversaries will
-exploit any modeling assumptions we make---and posing a model of our
-adversaries requires such assumptions.
+and uses this model to select its actions.  Model-based reinforcement
+learning would fail catastrophically in our real-world scenario.  The
+model in the model-based algorithm would have to include submodels of
+all agents, including those of our adversary.  But we must expect that
+our adversaries will exploit any modeling assumptions we make---and
+posing a model of our adversaries requires making such assumptions.
 
 The model-free alternative presents itself as an option.  Within
 Bayesian reinforcement learning, a recent comprehensive survey of BRL
 \cite{ghavamzadeh2016bayesian} discusses and develops only two such
-classes of algorithms in that context: \emph{Bayesian Policy Gradient
-  Algorithms} \cite{engel2007bayesian, ghavamzadeh2016abayesian} and
-\emph{Bayesian Actor-Critic Algorithms} \cite{ghavamzadeh2007bayesian,
+classes of algorithms in that context: \emph{Bayesian policy gradient
+  algorithms} \cite{engel2007bayesian, ghavamzadeh2016abayesian} and
+\emph{Bayesian actor-critic algorithms} \cite{ghavamzadeh2007bayesian,
   ghavamzadeh2016abayesian}.  Of these two possibilities the authors
 of \cite{ghavamzadeh2016bayesian} caution that their Bayesian actor
 critic implementation takes advantage of the Markov property, but that
@@ -422,30 +420,32 @@ work on model-free Bayesian RL, with the rest of the community slow to
 adopt these (admittedly somewhat recent) ideas.  Moreover while these
 authors discuss applying their methods in a multi-agent framework,
 they intend their work mostly for single- or few-agents.  They concede
-that their methods require a posterior over all policies of all
-agents, which may remain tractable in some cases, such as agents
-having independent policies, but this simplification seems
+that their methods require a posterior over the policies of all
+agents.  In some cases, the calculations may remain tractable, such if
+the agents have independent policies.  But this simplification seems
 questionable for our application.  The authors also mention the
 possibility of addressing this constraint with a myopic (1-step) look
 ahead on the value function and cite \cite{dearden1998bayesian}, an
-article about Q-learning.  But it remains unclear to what extent BRL
-will have comparable capabilities to the capabilities of the methods
-intended for and tested on primarily multi-agent environments.  Never
-the less, we deem that these techniques still merit a close look and
-careful understanding.
+article about Q-learning.  It remains unclear to what extent agents
+employing BRL will have comparable capabilities to the capabilities of
+agents trained with other methods---methods intended for, and tested
+on, primarily multi-agent environments.  Nevertheless, we deem that
+these Bayesian techniques still merit a close look, careful
+understanding, and revealing tests against other methods.
 
-Both Bayesian Policy Gradients and the Bayesian Actor Critic model the
-time varying gradient of the objective function used to train the
-policy as a Gaussian process (GP)---a type of stochastic process on
-the real line or, in our case, a discrete subset where we have data.
-This objective computes the expected return (discounted sum of all
-rewards).  A GP assumes that all its finite dimensional distributions
-(ie.\ the joint distribution of a finite sample of the domain) have a
-multidimensional Gaussian distribution. With GPs, Bayesian policy
-gradients (and Baysian actor-critic) can perform inference on the
-posterior of the gradient conditioned on the data, which allows for
-the success of the method.  Still it remains unclear to what extent
-the Gaussian process assumption has limitations.
+Both Bayesian policy gradients and the Bayesian actor critic model the
+time varying gradient of the objective function (used to train the
+policy) as a Gaussian process (GP)---a type of stochastic process on
+the real line, or, in our case, a discrete subset where we have data.
+This objective function gives the expected return (discounted sum of
+rewards).  To satisfy its definition, a GP must have all its finite
+dimensional distributions (ie.\ the joint distribution of a finite
+sample of its domain) possessing a multidimensional Gaussian
+distribution. With GPs, Bayesian policy gradients (and Baysian
+actor-critic) can perform inference on the posterior of the gradient
+conditioned on the data, which allows for the success of the method.
+Still it remains unclear to what extent the Gaussian process
+assumption has limitations.
 
 For this reasons, together with the lack of testing on multi-agent
 systems, we cast a wider net by considering recent work of several
