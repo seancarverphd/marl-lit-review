@@ -317,18 +317,19 @@ the distribution for a point estimate succeeds as the optimal solution
 \cite{aastrom2012introduction}.  For example, to control a linear
 regulator, where a quadratic cost function determines optimality,
 corrupted by Gaussian noise, (the LQR problem) the optimal solution
-uses a Kalman filter to produce optimal state estimates, then applies
-the optimal control for a determinisitic regulator assuming a
-``known'' state equal to those optimal state estimates.  In this case,
-throwing away the distribution allows a simpler, more parisimonious,
-and indeed still fully optimal solution.
+uses a Kalman filter to produce the optimal state (point) estimate as
+a function of time.  Then the solution applies the optimal control for
+a determinisitic regulator given that the ``assumed known'' state
+equals the state (point) estimate.  In this case, throwing away the
+distribution allows a simpler, more parisimonious, and indeed still
+fully optimal solution.
 
 A system satisfies the so-called \emph{separation principle} if such a
 separation between estimation and control holds for the system.  But
 systems do not always satisfy the separation principle---those that do
-stand as the exceptions.  If an analyst can get away with invoking the
-separation principle, the calculations greatly simplify.  Indeed, for
-the LQR problem, the solution exists in closed form.
+stand as the exceptions.  If an engineer can get away with invoking
+the separation principle, the calculations greatly simplify.  Indeed,
+for the LQR problem, the solution exists in closed form.
 
 We do not know how well the separation principle applies in our
 problem and we do not know how computationally expensive it will
@@ -337,18 +338,21 @@ applies distributional RL (or, more precisely, Bayesian RL) to
 simplified versions of the problems first, then push the envelope both
 in terms of the complexity of the scenario, and in terms of the
 approximations used---such as the separation principle hoping that it
-applies approximately.
+applies at least approximately.
 
 In the LQR problem we have a precise notion of optimality (the
 quadratic cost function) and a proof that the solution presented
 optimizes this condition.  In our comms and jammers scenario we have
-neither.  We could say, however, that we will apply principles, such
-as Bayes Rule, that researchers in other contexts have shown lead to
-provably optimal solutions.  In that sense we could say that
-``optimal'' principles underlie our methods, rather than that our
-solutions achieve optimality.  Approaching the problem in this way, we
-hope that our solutions will stand as very good, indeed good enough,
-and perhaps even the very best.
+neither.  Moreover, a lengthy (and uncertain to succeed) search for
+such a proof may have little to no value for our clients.
+
+We could say, however, that we will apply principles, such as Bayes
+Rule, that researchers in other contexts have shown lead to provably
+optimal solutions.  In that sense we could say that ``optimal''
+principles underlie our methods, rather than that our solutions
+achieve optimality.  Approaching the problem in this way, we hope that
+our solutions will stand as very good, indeed good enough, and perhaps
+even the very best---unproved, of course.
 
 Finally multi-agent RL \cite{bucsoniu2010multi} extends RL to
 environments that include other interacting agents cooperating or
@@ -368,21 +372,21 @@ the authors expect to remain identical to the calculations of the
 other agents, as the search proceeds).
 
 On the other hand, our comms and jammers implementation does land
-squarely in the multi-agent camp because the red and blue side
-certainly have different interests, and moreover, barring unmodeled
-espionage, have different information.  Even within each faction,
-while the individual blue and red units may have the same interests as
-others with the same color, and typically will share information anong
-others of the same side, they may still find themselves out of
-communication with their compatriots, and therefore suffer from the
-need to overcome different information.
+squarely in the multi-agent camp because the blue and red sides
+certainly do have different interests, and moreover, barring unmodeled
+espionage, certainly do have different information.  The two sides
+have not just different interests, but diametrically opposed
+interests.
 
-A multi-agent environment, such as the one needed for electronic
-warfare, includes actors---some of which have diametrically opposed
-interests---making decisions based on information hidden from other
-actors.  This reality becomes an additional wrinkle which we must deal
-with, concerning especially the possibility of success with
-programming our drones to model the environment.
+To reiterate, each faction has its own sensors and uses measurements
+which it hides from its adversaries.  But even within each faction,
+some units can access information that other units cannot.  Indeed,
+the individual blue and red units may yet find themselves out of
+communication with their compatriots.  Thus, even assuming factions
+share interests, they may not always share all information.  As a
+result, there can exist more than two agents (by Shoham's definition)
+in our environment.  These realities become challenging wrinkles which
+we must deal with for success.
 
 Reinforcement learning algorithms divide into \emph{model-based}
 algorithms and \emph{model-free} algorithms.  The two methods differ
@@ -409,42 +413,41 @@ the Bayesian policy gradient algorithm does not make this assumption
 and stands appropriate for partially observed problems including
 Markov games.
 
-These constraints, together with our preference for BRL, narrow, to a
-single option, the initially wide field of RL algorithms of interest
-along this path.  However, there remain other trade offs to consider,
-so we should not focus on purely Bayesian methods.  Indeed, it seems
-that just one set of authors has produced most of the work on
-model-free Bayesian RL, with the rest of the community slow to adopt
-these (admittedly somewhat recent) ideas.  Moreover while these
+These constraints, together with an initial preference for BRL,
+narrow, to a single option, the initially wide field of RL algorithms
+of interest along this path.  However, there remain other trade offs
+to consider, so we should not focus on purely Bayesian methods.
+Indeed, it seems that just one set of authors has produced most of the
+work on model-free Bayesian RL, with the rest of the community slow to
+adopt these (admittedly somewhat recent) ideas.  Moreover while these
 authors discuss applying their methods in a multi-agent framework,
 they intend their work mostly for single- or few-agents.  They concede
-that their methods require a posterior over the policies of other,
-which may remain tractable in some case, like agents having
-independent policies, but it seems that this simplifications will
-remain invalid in our case.  The authors also mention the possibility
-of addressing this constraint with a myopic (1-step) look ahead on the
-value function and cite \cite{dearden1998bayesian}, an article about
-Q-learning.  It remains unclear to what extent these techniques have
-comparable capabilities to the capabilities of the methods intended
-for and tested on primarily multi-agent environments.  But I deem that
-these techniques still merit a close look and understanding.
+that their methods require a posterior over all policies of all
+agents, which may remain tractable in some cases, such as agents
+having independent policies, but this simplification seems
+questionable for our application.  The authors also mention the
+possibility of addressing this constraint with a myopic (1-step) look
+ahead on the value function and cite \cite{dearden1998bayesian}, an
+article about Q-learning.  But it remains unclear to what extent BRL
+will have comparable capabilities to the capabilities of the methods
+intended for and tested on primarily multi-agent environments.  Never
+the less, we deem that these techniques still merit a close look and
+careful understanding.
 
-Both the Bayesian Policy Gradient and the Bayesian Actor Critic
-methods model the time varying gradient of the objective function used
-for training the policy (specifically, the expected discounted return)
-as a continuous Gaussian process (GP), a type of stochastic process.
-A GP assumes that all its finite dimensional distributions (ie.\ the
-joint distribution of finitely many sample points, with the
-uncountable rest marginalized) have a multidimensional Gaussian
-distribution.
+Both Bayesian Policy Gradients and the Bayesian Actor Critic model the
+time varying gradient of the objective function used to train the
+policy as a Gaussian process (GP)---a type of stochastic process on
+the real line or, in our case, a discrete subset where we have data.
+This objective computes the expected return (discounted sum of all
+rewards).  A GP assumes that all its finite dimensional distributions
+(ie.\ the joint distribution of a finite sample of the domain) have a
+multidimensional Gaussian distribution. With GPs, Bayesian policy
+gradients (and Baysian actor-critic) can perform inference on the
+posterior of the gradient conditioned on the data, which allows for
+the success of the method.  Still it remains unclear to what extent
+the Gaussian process assumption has limitations.
 
-With GPs Bayesian policy gradients (and Baysian actor-critic) can
-perform inference on the posterior of the gradient conditioned on the
-data, which allows for the success of the method.  Still it remains
-unclear to what extent the Gaussian process assumption has
-limitations.
-
-For this reasons, together with the lack of support for multi-agent
+For this reasons, together with the lack of testing on multi-agent
 systems, we cast a wider net by considering recent work of several
 authors concerning other techniques for multi-agent RL, particualarly
 those specifically intended for adversarial applications.
