@@ -353,9 +353,9 @@ and perhaps even the very best.
 Finally multi-agent RL \cite{bucsoniu2010multi} extends RL to
 environments that include other interacting agents cooperating or
 competing for reward.  The definition of ``multi-agent'' given the
-introduction to \cite{shoham2008multiagent} requires that the agents have
-different information, different interests (quantified as reward), or
-both.
+introduction to Shoham's textbook \cite{shoham2008multiagent} requires
+that the agents have different information, different interests
+(quantified as reward), or both.
 
 By this definition, Hoffmann's implementation of search and rescue
 \cite{hoffmann2009mobile}, discussed above, does \emph{not} qualify as
@@ -417,24 +417,26 @@ that just one set of authors has produced most of the work on
 model-free Bayesian RL, with the rest of the community slow to adopt
 these (admittedly somewhat recent) ideas.  Moreover while these
 authors discuss applying their methods in a multi-agent framework,
-they intend their work mostly for single-agent.  They concede that
-their methods require a posterior over the policies of other, which
-may remain tractable in some case, like agents having independent
-policies, but it seems that for us this simplifications will remain
-invalid.  The authors also mention a myopic (1-step) look ahead on the
+they intend their work mostly for single- or few-agents.  They concede
+that their methods require a posterior over the policies of other,
+which may remain tractable in some case, like agents having
+independent policies, but it seems that this simplifications will
+remain invalid in our case.  The authors also mention the possibility
+of addressing this constraint with a myopic (1-step) look ahead on the
 value function and cite \cite{dearden1998bayesian}, an article about
-Q-learning.  It remains unclear whether these techniques have the
-capabilities of methods intended for and tested on primarily
-multi-agent environments.  Still these techniques merit a close look
-and understanding.
+Q-learning.  It remains unclear to what extent these techniques have
+comparable capabilities to the capabilities of the methods intended
+for and tested on primarily multi-agent environments.  But I deem that
+these techniques still merit a close look and understanding.
 
 Both the Bayesian Policy Gradient and the Bayesian Actor Critic
 methods model the time varying gradient of the objective function used
 for training the policy (specifically, the expected discounted return)
 as a continuous Gaussian process (GP), a type of stochastic process.
 A GP assumes that all its finite dimensional distributions (ie.\ the
-joint of finitely many sample points, with the rest marginalized) have
-a multidimensional Gaussian distribution.
+joint distribution of finitely many sample points, with the
+uncountable rest marginalized) have a multidimensional Gaussian
+distribution.
 
 With GPs Bayesian policy gradients (and Baysian actor-critic) can
 perform inference on the posterior of the gradient conditioned on the
