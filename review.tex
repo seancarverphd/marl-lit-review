@@ -182,13 +182,13 @@ The electronic warfare application that we consider does not have
 exactly this form.  We aim not just to locate the other side's birds,
 but also we aim to keep (or for red, block) communication between blue
 units.  This additional objective lands the problem squarely in the
-purvue of reinforcement learning.  That said, the objective of
+purview of reinforcement learning.  That said, the objective of
 electronic warfare benefits from knowing, even with uncertainty, the
 locations of the other side's UAVs.  Moreover, like with active
 sensing, each side can move its own fleet to localize the other's, but,
 with electronic warfare, it becomes a means to the end of meeting its
 other objectives.  Therefore, we look to the literature on active
-sensing only for inspriation.
+sensing only for inspiration.
 
 We start with one representative paper in this field
 \cite{hoffmann2009mobile}, by Hoffman and coauthors.  Hoffmann et al.\
@@ -216,11 +216,11 @@ uncertainty in these directions.
 We propose to codify the comms and jammers objective function by
 giving a reward to each agent based on which units they succeed in
 directly or indirectly (eg.\ through secondary connections)
-contacting.  Each agent then tries to maximize the cumululative
+contacting.  Each agent then tries to maximize the cumulative
 discounted expected value of this reward.
 
 Hoffmann considers two cases separately: bearings-only measurements,
-and range-only meausurements.  Both will become useful simplifications
+and range-only measurements.  Both will become useful simplifications
 in our case.  Taking inspiration from Hoffmann, we can test the
 performance of our agents under each of these constraints (ie.\
 bearings-only and range-only measurements) separately, then together
@@ -230,7 +230,7 @@ sensors.
 Extending the work of Hoffmann, Ryan et al. \cite{ryan2010particle}
 use non-trivial models for the sensor dynamics appropriate for
 fixed-wing UAVs that may tens of seconds to execute a maneuver, such
-as a 180 degree turn.  In constrast, the quadrotor robots
+as a 180 degree turn.  In contrast, the quadrotor robots
 \cite{hoffmann2007quadrotor} of our models have simple dynamics and
 can essentially execute maneuvers in a single time step.  While our
 work will initially consider UAVs of the sort that Hoffmann considers,
@@ -270,7 +270,7 @@ cost'' (maximizes reward).
 Engineers typically deal with continuous systems (ie robotics),
 whereas many, but not all, reinforcement learning solutions have
 finite time steps, finite action spaces, as well as, often, finite
-state spaces.  The treaatment remains essentially the same, but may
+state spaces.  The treatment remains essentially the same, but may
 look a little different.  For example, in engineering an analogous
 integral of cost can replace the RL return consisting of a discounted
 accumulation of rewards.
@@ -287,7 +287,7 @@ optimality criteria---the solutions must tautologically coincide.  But
 the approximations to optimality made in each discipline may differ,
 and the assumptions and problem formulations can also differ, as well.
 Undoubtedly, we would find a similar truth to analogous statements
-made of connections betweeen RL and active sensing.
+made of connections between RL and active sensing.
 
 Deep RL \cite{li2017deep} uses neural networks to represent the
 functions learned by the agent(s).  Classically, RL implementations,
@@ -319,9 +319,9 @@ regulator, where a quadratic cost function determines optimality,
 corrupted by Gaussian noise, (the LQR problem) the optimal solution
 uses a Kalman filter to produce the optimal state (point) estimate as
 a function of time.  Then the solution applies the optimal control for
-a determinisitic regulator given that the ``assumed known'' state
+a deterministic regulator given that the ``assumed known'' state
 equals the state (point) estimate.  In this case, throwing away the
-distribution allows a simpler, more parisimonious, and indeed still
+distribution allows a simpler, more parsimonious, and indeed still
 fully optimal solution.
 
 A system satisfies the so-called \emph{separation principle} if such a
@@ -441,47 +441,49 @@ This objective function gives the expected return (discounted sum of
 rewards).  To satisfy its definition, a GP must have all its finite
 dimensional distributions (ie.\ the joint distribution of a finite
 sample of its domain) possessing a multidimensional Gaussian
-distribution. With GPs, Bayesian policy gradients (and Baysian
+distribution. With GPs, Bayesian policy gradients (and Bayesian
 actor-critic) can perform inference on the posterior of the gradient
 conditioned on the data, which allows for the success of the method.
 Still it remains unclear to what extent the Gaussian process
 assumption has limitations.
 
-For this reasons, together with the lack of testing on multi-agent
+For this reason, together with the lack of testing on multi-agent
 systems, we cast a wider net by considering recent work of several
-authors concerning other techniques for multi-agent RL, particualarly
-those specifically intended for adversarial applications.
+authors who created techniques specifically for multi-agent RL.  Of
+course, our interest heightens for techniques intended specifically
+for adversarial applications.
 
 In a recent paper, Lowe et al. \cite{lowe2017multi} considers an
-actor-critic paradigm, but one that imposes centralized training to
-prepare for decentralized execution.  Lowe and coauthors cite a recent
-body of previous work briefly reviewed in their paper.  In this
-paradigm, for all agents, there exists one single central critic
-trained with the all agents observations (or the whole state), and all
-actions (or all policies) of all agents.  After training, during
-testing and execution no centralizations remain, and each agent
-executes its own decentralized but pre-trained critic.  On the other
-hand, each agent's actors in this paradigm remains always
+actor-critic paradigm.  Lowe's paradigm imposes centralized training
+to prepare for decentralized execution.  Lowe and coauthors cite a
+large body of related work that they briefly review in their paper.
+In this paradigm, for all agents, there exists one single central
+critic trained with the all agents observations (or the whole state),
+and all actions (or all policies) of all agents.  After training,
+during testing and execution, no centralizations remain: each agent
+executes with its own decentralized but pre-trained critic.  On the
+other hand, each agent's actor in this paradigm remains always
 decentralized.  Though the actors and never get the benefit of
 centralized training, the success of Lowe's methods apparently depends
-upon consistently decentralized actors.
+upon these consistently decentralized actors.
+
+Centralized training has a severe limitation if our agents do not have
+the ability to learn during execution.  Indeed, in adversarial
+scenarios such as ours, we must, on the fly, adapt and counter to our
+adversaries adapting and countering us.
 
 A second paper by Srinivasan et al., \cite{srinivasan2018actor},
-considers an alternative approach which never centralizes the
-training.  Decentralized training, as with decentralized testing and
-execution, may matter to us if we want to train our agents as they
-perform in the field.  Of course this property matters most in
-situations in which we must adapt and counter, on the fly, to our
-adversaries adapting and countering us.  Indeed Scrinivasan and
-coauthors intend their work for adversarial
+addresses this issue and indeed indicates an intention for
+specifically adversarial environments.  They use decentralized
+training, as well as decentralized execution.  The authors test their
+methods on two versions of simulated poker.
 
-A different paper, \cite{su2020counterfactual}, considers multi-agent
-actor-critics in situations where different agents cooperate to
-maintain a graph of two-way connections---a relevant capability for
-comms and jammers within each faction, though, in this paper, without
-the spector of competition from the other side.
-
-Finally Foerster et al....
+A different paper of potential relevance to us, by Su et al.\
+\cite{su2020counterfactual}, considers multi-agent actor-critics in
+situations where different agents cooperate to maintain a graph of
+two-way connections---a capability needed for comms and jammers within
+each faction, though, in this paper, without the specter of
+competition from the other side.
 
 % \nocite{*}
 \bibliographystyle{ieeetr}
